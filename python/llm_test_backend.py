@@ -109,6 +109,38 @@ def estimate_token_count(text: str) -> int:
     return max(1, estimated_tokens)
 
 
+def mask_secret(value: str, keep: int = 4) -> str:
+    if not value:
+        return value
+    text = str(value)
+    if len(text) <= keep * 2:
+        return "*" * len(text)
+    return f"{text[:keep]}{'*' * (len(text) - keep * 2)}{text[-keep:]}"
+
+
+def mask_authorization(value: str) -> str:
+    if not value:
+        return value
+    parts = value.split()
+    if len(parts) == 2 and parts[0].lower() == "bearer":
+        return f"{parts[0]} {mask_secret(parts[1])}"
+    return mask_secret(value)
+
+
+def redact_headers_for_log(headers: Dict[str, str]) -> Dict[str, str]:
+    safe_headers = dict(headers)
+    if "Authorization" in safe_headers:
+        safe_headers["Authorization"] = mask_authorization(safe_headers["Authorization"])
+    return safe_headers
+
+
+def redact_config_for_log(config_data: Dict[str, Any]) -> Dict[str, Any]:
+    safe_config = dict(config_data)
+    if "api_key" in safe_config:
+        safe_config["api_key"] = mask_secret(safe_config["api_key"])
+    return safe_config
+
+
 def calculate_dynamic_timeout(prompt_length: int, base_timeout: int) -> int:
     """
     根据prompt长度动态计算超时时间
@@ -172,6 +204,279 @@ def generate_prompt(length: int, seed: int = 0) -> str:
     return prompt
 
 
+def calculate_embedding_reserved_tokens(prompt_length: int) -> int:
+    if prompt_length <= 0:
+        return 0
+    return min(128, max(16, prompt_length // 20))
+
+
+def generate_embedding_prompt(length: int, seed: int = 0) -> str:
+    """Generate prompt for embeddings without extra suffix, with reserved margin."""
+    words = []
+
+    if seed > 0:
+        words.append(f"[Request-{seed}-{int(time.time() * 1000)}]")
+
+    reserved_tokens = calculate_embedding_reserved_tokens(length)
+    target_length = max(length - reserved_tokens, 1)
+
+    for _ in range(target_length):
+        words.append(random.choice(WORD_LIST))
+
+    return " ".join(words)
+
+
+async def execute_embedding_request(
+    api_url: str,
+    api_key: str,
+    model_name: str,
+    prompt_length: int,
+    timeout: int,
+    seed: int = 0,
+) -> Dict[str, Any]:
+    """执行Embedding测试请求（OpenAI兼容 /v1/embeddings）"""
+    print(f"[Embedding] 开始请求 - Prompt长度: {prompt_length}, Seed: {seed}")
+
+    prompt_text = generate_embedding_prompt(prompt_length, seed)
+
+    headers = {
+        "Content-Type": "application/json",
+    }
+    if api_key and api_key.strip():
+        headers["Authorization"] = f"Bearer {api_key}"
+
+    payload = {
+        "model": model_name,
+        "input": prompt_text,
+        "encoding_format": "float"
+    }
+
+    start_time = time.perf_counter()
+    timeout_seconds = timeout / 1000.0
+
+    try:
+        async with httpx.AsyncClient(
+            timeout=timeout_seconds,
+            verify=False
+        ) as client:
+            response = await client.post(api_url, headers=headers, json=payload)
+            end_time = time.perf_counter()
+
+            if response.status_code != 200:
+                error_text = response.text
+                error_msg = f"HTTP {response.status_code}: {error_text}"
+                print(f"[Embedding][Error] {error_msg}")
+                return {
+                    "success": False,
+                    "error": error_msg,
+                    "prompt_length": prompt_length
+                }
+
+            data = response.json()
+            usage_info = data.get("usage")
+
+            actual_prompt_tokens = None
+            token_source = "Unknown"
+            if usage_info:
+                prompt_tokens = usage_info.get("prompt_tokens")
+                total_tokens = usage_info.get("total_tokens")
+                if prompt_tokens is not None:
+                    actual_prompt_tokens = prompt_tokens
+                    token_source = "API"
+                elif total_tokens is not None:
+                    actual_prompt_tokens = total_tokens
+                    token_source = "API"
+
+            if actual_prompt_tokens is None:
+                actual_prompt_tokens = estimate_token_count(prompt_text)
+                token_source = "Local Estimation"
+
+            total_time_ms = (end_time - start_time) * 1000
+            prefill_time_ms = total_time_ms
+            prefill_speed = (actual_prompt_tokens / (prefill_time_ms / 1000)) if prefill_time_ms > 0 else 0
+
+            return {
+                "success": True,
+                "prompt_length": prompt_length,
+                "prompt_tokens": actual_prompt_tokens,
+                "output_tokens": 0,
+                "ttft_ms": round(total_time_ms, 2),
+                "prefill_time_ms": round(prefill_time_ms, 2),
+                "prefill_speed": round(prefill_speed, 2),
+                "output_time_ms": 0,
+                "output_speed": 0,
+                "total_time_ms": round(total_time_ms, 2),
+                "prompt_text": prompt_text,
+                "output_content": "",
+                "reasoning_content": "",
+                "usage_info": usage_info,
+                "server_timing_used": False,
+                "has_streaming_content": False,
+                "chunk_count": 1,
+                "start_timestamp": start_time,
+                "first_chunk_timestamp": end_time,
+                "first_token_timestamp": None,
+                "end_timestamp": end_time,
+                "token_source": token_source,
+                "token_timestamps": [],
+                "itl_stats": {}
+            }
+    except (httpx.ReadTimeout, httpx.WriteTimeout, httpx.ConnectTimeout, httpx.PoolTimeout) as e:
+        error_msg = f"请求超时: {type(e).__name__}: {str(e)} (提示词长度: {prompt_length}, 超时设置: {timeout}ms)"
+        print(f"[Embedding][Error] {error_msg}", flush=True)
+        return {
+            "success": False,
+            "error": error_msg,
+            "prompt_length": prompt_length
+        }
+    except httpx.HTTPError as e:
+        error_msg = f"HTTP错误: {type(e).__name__}: {str(e)}"
+        print(f"[Embedding][Error] {error_msg}", flush=True)
+        return {
+            "success": False,
+            "error": error_msg,
+            "prompt_length": prompt_length
+        }
+    except Exception as e:
+        error_msg = f"请求异常: {type(e).__name__}: {str(e)}"
+        print(f"[Embedding][Error] {error_msg}", flush=True)
+        return {
+            "success": False,
+            "error": error_msg,
+            "prompt_length": prompt_length
+        }
+
+
+async def execute_ollama_embedding_request(
+    api_url: str,
+    api_key: str,
+    model_name: str,
+    prompt_length: int,
+    timeout: int,
+    seed: int = 0,
+) -> Dict[str, Any]:
+    """执行Ollama Embedding测试请求（/api/embeddings 或 /api/embed）"""
+    print(f"[Embedding-Ollama] 开始请求 - Prompt长度: {prompt_length}, Seed: {seed}")
+
+    prompt_text = generate_embedding_prompt(prompt_length, seed)
+
+    headers = {"Content-Type": "application/json"}
+    if api_key and api_key.strip():
+        headers["Authorization"] = f"Bearer {api_key}"
+
+    api_url_clean = api_url.rstrip("/")
+    use_embed_endpoint = api_url_clean.endswith("/api/embed")
+    if use_embed_endpoint:
+        payload = {
+            "model": model_name,
+            "input": prompt_text
+        }
+    else:
+        payload = {
+            "model": model_name,
+            "prompt": prompt_text
+        }
+
+    start_time = time.perf_counter()
+    timeout_seconds = timeout / 1000.0
+
+    try:
+        async with httpx.AsyncClient(
+            timeout=timeout_seconds,
+            verify=False
+        ) as client:
+            response = await client.post(api_url, headers=headers, json=payload)
+            end_time = time.perf_counter()
+
+            if response.status_code != 200:
+                error_text = response.text
+                error_msg = f"HTTP {response.status_code}: {error_text}"
+                print(f"[Embedding-Ollama][Error] {error_msg}")
+                return {
+                    "success": False,
+                    "error": error_msg,
+                    "prompt_length": prompt_length
+                }
+
+            data = response.json()
+
+            usage_info = {}
+            prompt_eval_count = data.get("prompt_eval_count")
+            if prompt_eval_count is not None:
+                usage_info["prompt_eval_count"] = prompt_eval_count
+                usage_info["prompt_tokens"] = prompt_eval_count
+            if data.get("prompt_eval_duration") is not None:
+                usage_info["prompt_eval_duration"] = data.get("prompt_eval_duration")
+            if data.get("total_duration") is not None:
+                usage_info["total_duration"] = data.get("total_duration")
+            if data.get("load_duration") is not None:
+                usage_info["load_duration"] = data.get("load_duration")
+
+            actual_prompt_tokens = None
+            token_source = "Unknown"
+            if prompt_eval_count is not None:
+                actual_prompt_tokens = prompt_eval_count
+                token_source = "API"
+            if actual_prompt_tokens is None:
+                actual_prompt_tokens = estimate_token_count(prompt_text)
+                token_source = "Local Estimation"
+
+            total_time_ms = (end_time - start_time) * 1000
+            prefill_time_ms = total_time_ms
+            prefill_speed = (actual_prompt_tokens / (prefill_time_ms / 1000)) if prefill_time_ms > 0 else 0
+
+            return {
+                "success": True,
+                "prompt_length": prompt_length,
+                "prompt_tokens": actual_prompt_tokens,
+                "output_tokens": 0,
+                "ttft_ms": round(total_time_ms, 2),
+                "prefill_time_ms": round(prefill_time_ms, 2),
+                "prefill_speed": round(prefill_speed, 2),
+                "output_time_ms": 0,
+                "output_speed": 0,
+                "total_time_ms": round(total_time_ms, 2),
+                "prompt_text": prompt_text,
+                "output_content": "",
+                "reasoning_content": "",
+                "usage_info": usage_info if usage_info else None,
+                "server_timing_used": False,
+                "has_streaming_content": False,
+                "chunk_count": 1,
+                "start_timestamp": start_time,
+                "first_chunk_timestamp": end_time,
+                "first_token_timestamp": None,
+                "end_timestamp": end_time,
+                "token_source": token_source,
+                "token_timestamps": [],
+                "itl_stats": {}
+            }
+    except (httpx.ReadTimeout, httpx.WriteTimeout, httpx.ConnectTimeout, httpx.PoolTimeout) as e:
+        error_msg = f"请求超时: {type(e).__name__}: {str(e)} (提示词长度: {prompt_length}, 超时设置: {timeout}ms)"
+        print(f"[Embedding-Ollama][Error] {error_msg}", flush=True)
+        return {
+            "success": False,
+            "error": error_msg,
+            "prompt_length": prompt_length
+        }
+    except httpx.HTTPError as e:
+        error_msg = f"HTTP错误: {type(e).__name__}: {str(e)}"
+        print(f"[Embedding-Ollama][Error] {error_msg}", flush=True)
+        return {
+            "success": False,
+            "error": error_msg,
+            "prompt_length": prompt_length
+        }
+    except Exception as e:
+        error_msg = f"请求异常: {type(e).__name__}: {str(e)}"
+        print(f"[Embedding-Ollama][Error] {error_msg}", flush=True)
+        return {
+            "success": False,
+            "error": error_msg,
+            "prompt_length": prompt_length
+        }
+
+
 async def execute_single_request(
     api_url: str,
     api_key: str,
@@ -190,6 +495,25 @@ async def execute_single_request(
     
     print(f"[Request] 开始请求 - Prompt长度: {prompt_length}, 输出长度: {output_length}, Seed: {seed}")
     
+    if api_type == "openai_embedding":
+        return await execute_embedding_request(
+            api_url=api_url,
+            api_key=api_key,
+            model_name=model_name,
+            prompt_length=prompt_length,
+            timeout=timeout,
+            seed=seed,
+        )
+    if api_type == "ollama_embedding":
+        return await execute_ollama_embedding_request(
+            api_url=api_url,
+            api_key=api_key,
+            model_name=model_name,
+            prompt_length=prompt_length,
+            timeout=timeout,
+            seed=seed,
+        )
+
     # 使用随机单词生成prompt，避免cache
     prompt_text = generate_prompt(prompt_length, seed)
     
@@ -250,7 +574,7 @@ async def execute_single_request(
     try:
         print(f"[Request] 发送请求到 {api_url}", flush=True)
         print(f"[Request] Payload大小预估: {len(json.dumps(payload))} 字节", flush=True)
-        print(f"[Request] Headers: {headers}", flush=True)
+        print(f"[Request] Headers: {redact_headers_for_log(headers)}", flush=True)
 
         # 配置httpx以支持大payload和长时间请求
         # httpx 0.13.x 使用不同的Timeout API
@@ -657,7 +981,7 @@ async def websocket_test_endpoint(websocket: WebSocket):
     
     try:
         config_data = await websocket.receive_json()
-        print(f"[WebSocket] 收到原始数据: {config_data}")
+        print(f"[WebSocket] 收到原始数据: {redact_config_for_log(config_data)}")
         config = TestConfig(**config_data)
         
         print(f"[Config] 接收配置 - API: {config.api_type}, 模型: {config.model_name}, 并发: {config.concurrency}")

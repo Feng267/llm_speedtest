@@ -1007,7 +1007,9 @@
 
         <div class="api-selector">
             <div class="api-option active" data-type="openai">OpenAI兼容接口</div>
+            <div class="api-option" data-type="openai_embedding">Embedding接口 (OpenAI兼容)</div>
             <div class="api-option" data-type="ollama">Ollama接口</div>
+            <div class="api-option" data-type="ollama_embedding">Ollama Embedding接口</div>
         </div>
 
         <div class="api-description" id="apiDescription">
@@ -1238,13 +1240,27 @@
                 pageTitle: '大模型 Prefill & Decode 性能测试工具 v2.2 (chao魔改版)',
                 langToggle: 'English',
                 apiOpenAI: 'OpenAI兼容接口',
+                apiEmbedding: 'Embedding接口 (OpenAI兼容)',
                 apiOllama: 'Ollama接口',
+                apiOllamaEmbedding: 'Ollama Embedding接口',
                 apiDescOpenAITitle: 'OpenAI兼容接口测试说明',
                 apiDescOpenAI1: '使用流式响应(stream=true)测量首字延迟',
                 apiDescOpenAI2: '预填充速度 = 提示词长度 / (首字到达时间 - 请求开始时间)',
                 apiDescOpenAI3: '输出速度 = 输出token数 / (输出完成时间 - 首字到达时间)',
                 apiDescOpenAI4: '适用于所有兼容OpenAI API的大模型服务',
                 apiDescOpenAI5: '<strong> 支持思考模型</strong>（DeepSeek-R1、Qwen-QwQ等）：自动统计总吞吐（思考+答案tokens）',
+                apiDescEmbeddingTitle: 'Embedding接口测试说明',
+                apiDescEmbedding1: '使用 /v1/embeddings 接口（OpenAI兼容）',
+                apiDescEmbedding2: 'Embedding延迟 = 请求完成时间 - 请求开始时间',
+                apiDescEmbedding3: 'Embedding吞吐 = prompt tokens / 总耗时',
+                apiDescEmbedding4: '不适用项：输出长度 / ITL / Decode 吞吐',
+                apiDescEmbedding5: '适用于阿里云百炼等OpenAI兼容Embedding模型',
+                apiDescOllamaEmbeddingTitle: 'Ollama Embedding接口测试说明',
+                apiDescOllamaEmbedding1: '使用 /api/embeddings 或 /api/embed 接口',
+                apiDescOllamaEmbedding2: 'Embedding延迟 = 请求完成时间 - 请求开始时间',
+                apiDescOllamaEmbedding3: 'Embedding吞吐 = prompt tokens / 总耗时',
+                apiDescOllamaEmbedding4: '不适用项：输出长度 / ITL / Decode 吞吐',
+                apiDescOllamaEmbedding5: '适用于本地Ollama Embedding模型',
                 apiDescOllamaTitle: 'Ollama接口测试说明',
                 apiDescOllama1: '使用非流式请求(stream=false)',
                 apiDescOllama2: '直接使用API返回的prompt_eval_duration和eval_duration指标',
@@ -1301,9 +1317,11 @@
                 // 表格标题
                 tableHeaderPromptLen: '提示词长度<br>(tokens)',
                 tableHeaderTTFT: 'TTFT<br>(ms)',
+                tableHeaderEmbeddingLatency: 'Embedding延迟<br>(ms)',
                 tableHeaderITL: 'ITL平均<br>(ms)',
                 tableHeaderPrefillTime: '预填充耗时<br>(ms)',
                 tableHeaderPrefillSpeed: '预填充速度<br>(tokens/s)',
+                tableHeaderEmbeddingSpeed: 'Embedding吞吐<br>(tokens/s)',
                 tableHeaderOutputLen: '输出长度<br>(tokens)',
                 tableHeaderOutputTime: '输出耗时<br>(ms)',
                 tableHeaderOutputSpeed: '输出速度<br>(tokens/s)',
@@ -1460,13 +1478,27 @@
                 pageTitle: 'LLM Prefill & Decode Performance Testing Tool v2.2 (chao mod)',
                 langToggle: '中文',
                 apiOpenAI: 'OpenAI Compatible API',
+                apiEmbedding: 'Embedding API (OpenAI Compatible)',
                 apiOllama: 'Ollama API',
+                apiOllamaEmbedding: 'Ollama Embedding API',
                 apiDescOpenAITitle: 'OpenAI Compatible API Test Description',
                 apiDescOpenAI1: 'Use streaming response (stream=true) to measure time to first token',
                 apiDescOpenAI2: 'Prefill speed = prompt length / (time to first token - request start time)',
                 apiDescOpenAI3: 'Decode speed = output tokens / (completion time - time to first token)',
                 apiDescOpenAI4: 'Works with all OpenAI API compatible LLM services',
                 apiDescOpenAI5: '<strong> Supports thinking models</strong> (DeepSeek-R1, Qwen-QwQ, etc.): automatically counts total throughput (reasoning + answer tokens)',
+                apiDescEmbeddingTitle: 'Embedding API Test Description',
+                apiDescEmbedding1: 'Use /v1/embeddings endpoint (OpenAI compatible)',
+                apiDescEmbedding2: 'Embedding latency = response time - request start time',
+                apiDescEmbedding3: 'Embedding throughput = prompt tokens / total time',
+                apiDescEmbedding4: 'Not applicable: output length / ITL / decode throughput',
+                apiDescEmbedding5: 'Works with OpenAI-compatible embedding models (e.g., DashScope)',
+                apiDescOllamaEmbeddingTitle: 'Ollama Embedding API Test Description',
+                apiDescOllamaEmbedding1: 'Use /api/embeddings or /api/embed endpoint',
+                apiDescOllamaEmbedding2: 'Embedding latency = response time - request start time',
+                apiDescOllamaEmbedding3: 'Embedding throughput = prompt tokens / total time',
+                apiDescOllamaEmbedding4: 'Not applicable: output length / ITL / decode throughput',
+                apiDescOllamaEmbedding5: 'Works with local Ollama embedding models',
                 apiDescOllamaTitle: 'Ollama API Test Description',
                 apiDescOllama1: 'Use non-streaming request (stream=false)',
                 apiDescOllama2: 'Directly use prompt_eval_duration and eval_duration from API response',
@@ -1523,9 +1555,11 @@
                 // Table headers
                 tableHeaderPromptLen: 'Prompt Length<br>(tokens)',
                 tableHeaderTTFT: 'TTFT<br>(ms)',
+                tableHeaderEmbeddingLatency: 'Embedding Latency<br>(ms)',
                 tableHeaderITL: 'ITL Avg<br>(ms)',
                 tableHeaderPrefillTime: 'Prefill Time<br>(ms)',
                 tableHeaderPrefillSpeed: 'Prefill Speed<br>(tokens/s)',
+                tableHeaderEmbeddingSpeed: 'Embedding Throughput<br>(tokens/s)',
                 tableHeaderOutputLen: 'Output Length<br>(tokens)',
                 tableHeaderOutputTime: 'Output Time<br>(ms)',
                 tableHeaderOutputSpeed: 'Output Speed<br>(tokens/s)',
@@ -1696,12 +1730,23 @@
 
             // 更新API选择器
             const apiOptions = document.querySelectorAll('.api-option');
-            apiOptions[0].textContent = t.apiOpenAI;
-            apiOptions[1].textContent = t.apiOllama;
+            const apiLabelMap = {
+                openai: t.apiOpenAI,
+                openai_embedding: t.apiEmbedding,
+                ollama: t.apiOllama,
+                ollama_embedding: t.apiOllamaEmbedding
+            };
+            apiOptions.forEach(option => {
+                const label = apiLabelMap[option.dataset.type];
+                if (label) {
+                    option.textContent = label;
+                }
+            });
 
             // 更新API描述（根据当前选中的类型）
             const activeApiType = document.querySelector('.api-option.active').dataset.type;
             updateApiDescription(activeApiType);
+            applyApiTypeUi(activeApiType);
 
             // 更新各个section标题
             const sections = document.querySelectorAll('.config-section h2, h2');
@@ -1785,8 +1830,12 @@
         // API 端点和模型名称配置
         let d_openai_apiUrl = 'http://10.0.0.50:8000/v1/chat/completions';          // OpenAI 兼容 API 的 URL 地址
         let d_openai_modelName = 'Qwen3-30B-A3B-Instruct-2507-Int4-W4A16';                                          // OpenAI 兼容 API 所使用的模型名称或路径
+        let d_openai_embedding_apiUrl = 'https://dashscope.aliyuncs.com/compatible-mode/v1/embeddings';             // OpenAI 兼容 Embedding API 的 URL 地址
+        let d_openai_embedding_modelName = 'text-embedding-v4';                                                     // OpenAI 兼容 Embedding API 模型名称
         let d_ollama_apiUrl = 'http://localhost:11434/api/chat';                    // Ollama API 的 URL 地址
         let d_ollama_modelName = 'Qwen3-32B-AWQ';                                      // Ollama API 所使用的模型名称
+        let d_ollama_embedding_apiUrl = 'http://localhost:11434/api/embeddings';     // Ollama Embedding API 的 URL 地址
+        let d_ollama_embedding_modelName = 'qwen3-embedding:4b-q8_0';                 // Ollama Embedding API 模型名称
         let d_api_key = '';                                                         // 访问 API 所需的认证密钥，如果不需要则可以留空
         // 文本生成长度控制参数 (整数)
         let d_minLength = 512;                                                      // 生成文本的最小长度（例如，token 或字符数）
@@ -1814,6 +1863,7 @@
                 const apiType = option.dataset.type;
                 updateApiDescription(apiType);
                 updateDefaultValues(apiType);
+                applyApiTypeUi(apiType);
             });
         });
 
@@ -1828,6 +1878,28 @@
                         <li>${t.apiDescOpenAI3}</li>
                         <li>${t.apiDescOpenAI4}</li>
                         <li>${t.apiDescOpenAI5}</li>
+                    </ul>
+                `;
+            } else if (apiType === 'openai_embedding') {
+                apiDescription.innerHTML = `
+                    <h3>${t.apiDescEmbeddingTitle}</h3>
+                    <ul>
+                        <li>${t.apiDescEmbedding1}</li>
+                        <li>${t.apiDescEmbedding2}</li>
+                        <li>${t.apiDescEmbedding3}</li>
+                        <li>${t.apiDescEmbedding4}</li>
+                        <li>${t.apiDescEmbedding5}</li>
+                    </ul>
+                `;
+            } else if (apiType === 'ollama_embedding') {
+                apiDescription.innerHTML = `
+                    <h3>${t.apiDescOllamaEmbeddingTitle}</h3>
+                    <ul>
+                        <li>${t.apiDescOllamaEmbedding1}</li>
+                        <li>${t.apiDescOllamaEmbedding2}</li>
+                        <li>${t.apiDescOllamaEmbedding3}</li>
+                        <li>${t.apiDescOllamaEmbedding4}</li>
+                        <li>${t.apiDescOllamaEmbedding5}</li>
                     </ul>
                 `;
             } else {
@@ -1851,14 +1923,71 @@
             if (apiType === 'openai') {
                 apiUrl.value = d_openai_apiUrl;
                 modelName.value = d_openai_modelName;
+            } else if (apiType === 'openai_embedding') {
+                apiUrl.value = d_openai_embedding_apiUrl;
+                modelName.value = d_openai_embedding_modelName;
+            } else if (apiType === 'ollama_embedding') {
+                apiUrl.value = d_ollama_embedding_apiUrl;
+                modelName.value = d_ollama_embedding_modelName;
             } else {
                 apiUrl.value = d_ollama_apiUrl;
                 modelName.value = d_ollama_modelName;
             }
         }
 
+        function isEmbeddingType(apiType) {
+            return apiType === 'openai_embedding' || apiType === 'ollama_embedding';
+        }
+
+        function getApiTypeLabel(apiType, t) {
+            if (apiType === 'openai') return t.apiOpenAI;
+            if (apiType === 'openai_embedding') return t.apiEmbedding;
+            if (apiType === 'ollama') return t.apiOllama;
+            if (apiType === 'ollama_embedding') return t.apiOllamaEmbedding;
+            return apiType;
+        }
+
+        function applyApiTypeUi(apiType) {
+            const disableForEmbedding = isEmbeddingType(apiType);
+            const outputLengthInput = document.getElementById('outputLength');
+            const temperatureInput = document.getElementById('temperatureInput');
+            const topPInput = document.getElementById('topPInput');
+            const presencePenaltyInput = document.getElementById('presencePenaltyInput');
+            const frequencyPenaltyInput = document.getElementById('frequencyPenaltyInput');
+
+            outputLengthInput.disabled = disableForEmbedding;
+            temperatureInput.disabled = disableForEmbedding;
+            topPInput.disabled = disableForEmbedding;
+            presencePenaltyInput.disabled = disableForEmbedding;
+            frequencyPenaltyInput.disabled = disableForEmbedding;
+        }
+
+        function getTableHeadersForApiType(apiType, t) {
+            if (isEmbeddingType(apiType)) {
+                return [
+                    t.tableHeaderPromptLen,
+                    t.tableHeaderEmbeddingLatency,
+                    t.tableHeaderITL,
+                    t.tableHeaderEmbeddingSpeed,
+                    t.tableHeaderOutputSpeed,
+                    t.tableHeaderStatus,
+                    t.tableHeaderDetail
+                ];
+            }
+            return [
+                t.tableHeaderPromptLen,
+                t.tableHeaderTTFT,
+                t.tableHeaderITL,
+                t.tableHeaderPrefillSpeed,
+                t.tableHeaderOutputSpeed,
+                t.tableHeaderStatus,
+                t.tableHeaderDetail
+            ];
+        }
+
         // 初始化
         updateApiDescription('openai');
+        applyApiTypeUi('openai');
 
         // 单词库用于生成提示词（丰富多样的词汇，涵盖不同主题和词性）
         const wordList = [
@@ -2645,8 +2774,10 @@ async function executeAndMeasureRequest(apiUrl, fetchOptions, timeout, promptLen
 
             concurrencyStats.minPrefillSpeed = Math.min(concurrencyStats.minPrefillSpeed, prefillSpeed);
             concurrencyStats.maxPrefillSpeed = Math.max(concurrencyStats.maxPrefillSpeed, prefillSpeed);
-            concurrencyStats.minOutputSpeed = Math.min(concurrencyStats.minOutputSpeed, outputSpeed);
-            concurrencyStats.maxOutputSpeed = Math.max(concurrencyStats.maxOutputSpeed, outputSpeed);
+            if (outputSpeed !== null && outputSpeed !== undefined && !isNaN(outputSpeed)) {
+                concurrencyStats.minOutputSpeed = Math.min(concurrencyStats.minOutputSpeed, outputSpeed);
+                concurrencyStats.maxOutputSpeed = Math.max(concurrencyStats.maxOutputSpeed, outputSpeed);
+            }
 
             // 重新从 testResultsData 计算平均值，确保准确性
             const allPrefillSpeeds = testResultsData
@@ -2657,7 +2788,7 @@ async function executeAndMeasureRequest(apiUrl, fetchOptions, timeout, promptLen
             const allOutputSpeeds = testResultsData
                 .filter(r => (r.status === translations.zh.statusSuccess || r.status === translations.en.statusSuccess) && r.outputSpeed !== 'N/A')
                 .map(r => parseFloat(r.outputSpeed));
-            if (outputSpeed) allOutputSpeeds.push(outputSpeed); // 包括当前批次的
+            if (outputSpeed !== null && outputSpeed !== undefined && !isNaN(outputSpeed)) allOutputSpeeds.push(outputSpeed); // 包括当前批次的
 
             if (allPrefillSpeeds.length > 0) {
                 concurrencyStats.avgPrefillSpeed = allPrefillSpeeds.reduce((sum, speed) => sum + speed, 0) / allPrefillSpeeds.length;
@@ -3091,6 +3222,14 @@ async function processOllamaResponse(response, promptLength) {
             return await testWithBackend('openai', apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout);
         }
 
+        async function testEmbedding(apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout) {
+            return await testWithBackend('openai_embedding', apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout);
+        }
+
+        async function testOllamaEmbedding(apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout) {
+            return await testWithBackend('ollama_embedding', apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout);
+        }
+
         async function testOllama(apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout) {
             return await testWithBackend('ollama', apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout);
         }
@@ -3179,6 +3318,7 @@ async function processOllamaResponse(response, promptLength) {
 
         function handleBackendResult(message) {
             const t = translations[currentLang];
+            const isEmbedding = isEmbeddingType(currentApiType);
             
             // Find or create table row for this prompt length
             const tbody = resultsDiv.querySelector('tbody');
@@ -3213,25 +3353,32 @@ async function processOllamaResponse(response, promptLength) {
                 const totalPrefillSpeed = prefillDurationSec > 0 ? totalPromptTokens / prefillDurationSec : 0;
 
                 // Decode: 从最早的first_chunk到最晚的end
-                const minFirstChunkTime = Math.min(...details.map(r => r.first_chunk_timestamp || r.first_token_timestamp || r.start_timestamp));
-                const maxEndTime = Math.max(...details.map(r => r.end_timestamp));
-                const decodeDurationSec = maxEndTime - minFirstChunkTime;
-                const totalOutputTokens = details.reduce((sum, r) => sum + r.output_tokens, 0);
-                const totalOutputSpeed = decodeDurationSec > 0 ? totalOutputTokens / decodeDurationSec : 0;
+                let totalOutputSpeed = null;
+                if (!isEmbedding) {
+                    const minFirstChunkTime = Math.min(...details.map(r => r.first_chunk_timestamp || r.first_token_timestamp || r.start_timestamp));
+                    const maxEndTime = Math.max(...details.map(r => r.end_timestamp));
+                    const decodeDurationSec = maxEndTime - minFirstChunkTime;
+                    const totalOutputTokens = details.reduce((sum, r) => sum + r.output_tokens, 0);
+                    totalOutputSpeed = decodeDurationSec > 0 ? totalOutputTokens / decodeDurationSec : 0;
+                }
 
                 console.log(`[Throughput] Prefill: ${totalPromptTokens} tokens / ${prefillDurationSec.toFixed(3)}s = ${totalPrefillSpeed.toFixed(2)} t/s`);
-                console.log(`[Throughput] Decode: ${totalOutputTokens} tokens / ${decodeDurationSec.toFixed(3)}s = ${totalOutputSpeed.toFixed(2)} t/s`);
+                if (!isEmbedding) {
+                    console.log(`[Throughput] Decode: ${totalOutputSpeed.toFixed(2)} t/s`);
+                }
 
                 // 计算TTFT和ITL的聚合统计（提前计算，供表格和详情使用）
                 const avgTtftMs = message.avg_ttft_ms || (details.reduce((sum, r) => sum + (r.ttft_ms || 0), 0) / details.length);
 
                 // 聚合ITL统计（从所有并发请求中取平均）
-                const itlStatsArray = details.filter(r => r.itl_stats && Object.keys(r.itl_stats).length > 0).map(r => r.itl_stats);
                 let avgItlMean = 'N/A';
                 let avgItlStd = 'N/A';
-                if (itlStatsArray.length > 0) {
-                    avgItlMean = (itlStatsArray.reduce((sum, s) => sum + (s.mean || 0), 0) / itlStatsArray.length).toFixed(2);
-                    avgItlStd = (itlStatsArray.reduce((sum, s) => sum + (s.std || 0), 0) / itlStatsArray.length).toFixed(2);
+                if (!isEmbedding) {
+                    const itlStatsArray = details.filter(r => r.itl_stats && Object.keys(r.itl_stats).length > 0).map(r => r.itl_stats);
+                    if (itlStatsArray.length > 0) {
+                        avgItlMean = (itlStatsArray.reduce((sum, s) => sum + (s.mean || 0), 0) / itlStatsArray.length).toFixed(2);
+                        avgItlStd = (itlStatsArray.reduce((sum, s) => sum + (s.std || 0), 0) / itlStatsArray.length).toFixed(2);
+                    }
                 }
 
                 cells[0].textContent = message.prompt_length;
@@ -3239,7 +3386,7 @@ async function processOllamaResponse(response, promptLength) {
                 cells[2].textContent = avgItlMean;
 
                 cells[3].textContent = totalPrefillSpeed.toFixed(2);  // 修复：使用基于时间戳的真实总吞吐
-                cells[4].textContent = totalOutputSpeed.toFixed(2);  // 修复：使用基于时间戳的真实总吞吐
+                cells[4].textContent = isEmbedding ? 'N/A' : totalOutputSpeed.toFixed(2);  // 修复：使用基于时间戳的真实总吞吐
                 cells[5].textContent = `${message.successful}/${message.concurrency} ${t.msgConcurrentSuccess}`;
 
                 // Create detail button
@@ -3255,8 +3402,8 @@ async function processOllamaResponse(response, promptLength) {
                 // 但保留第一个请求的prompt/output作为示例
                 let concurrentDetailsToSave = message.concurrent_details;
                 const firstPromptSample = message.concurrent_details[0]?.prompt_text || 'a'.repeat(message.prompt_length);
-                const firstOutputSample = message.concurrent_details[0]?.output_content || '';
-                const firstReasoningSample = message.concurrent_details[0]?.reasoning_content || '';
+                const firstOutputSample = isEmbedding ? '' : (message.concurrent_details[0]?.output_content || '');
+                const firstReasoningSample = isEmbedding ? '' : (message.concurrent_details[0]?.reasoning_content || '');
 
                 if (!saveDetailContent) {
                     concurrentDetailsToSave = message.concurrent_details.map(detail => {
@@ -3264,15 +3411,24 @@ async function processOllamaResponse(response, promptLength) {
                         return rest;
                     });
                 }
+                if (isEmbedding) {
+                    concurrentDetailsToSave = concurrentDetailsToSave.map(detail => ({
+                        ...detail,
+                        output_tokens: 0,
+                        output_time_ms: 0,
+                        output_speed: null,
+                        itl_stats: {}
+                    }));
+                }
 
                 // Prepare result entry for detail view
                 const resultEntry = {
                     promptLength: message.prompt_length,
                     prefillTimeMs: message.concurrent_details[0]?.prefill_time_ms.toFixed(2) || 'N/A',
                     prefillSpeed: totalPrefillSpeed.toFixed(2),  // 修复：使用总吞吐而不是平均值
-                    outputTokens: message.concurrent_details[0]?.output_tokens || 'N/A',
-                    outputTimeMs: message.concurrent_details[0]?.output_time_ms.toFixed(2) || 'N/A',
-                    outputSpeed: totalOutputSpeed.toFixed(2),  // 修复：使用总吞吐而不是平均值
+                    outputTokens: isEmbedding ? 'N/A' : (message.concurrent_details[0]?.output_tokens || 'N/A'),
+                    outputTimeMs: isEmbedding ? 'N/A' : (message.concurrent_details[0]?.output_time_ms.toFixed(2) || 'N/A'),
+                    outputSpeed: isEmbedding ? 'N/A' : totalOutputSpeed.toFixed(2),  // 修复：使用总吞吐而不是平均值
                     status: t.statusSuccess,
                     concurrency: message.concurrency,
                     concurrentDetails: concurrentDetailsToSave,
@@ -3282,7 +3438,7 @@ async function processOllamaResponse(response, promptLength) {
                     usageInfo: message.concurrent_details[0]?.usage_info || null,
                     tokenSource: message.concurrent_details[0]?.token_source || 'Unknown',
                     requestConfig: {
-                        apiType: currentApiType === 'openai' ? 'OpenAI Compatible' : 'Ollama',
+                        apiType: getApiTypeLabel(currentApiType, t),
                         model: currentModelName
                     },
                     timestamp: new Date().toISOString(),
@@ -3302,7 +3458,7 @@ async function processOllamaResponse(response, promptLength) {
                 testResultsData.push(resultEntry);
 
                 // Update charts and stats
-                updateConcurrencyStats(totalPrefillSpeed, totalOutputSpeed);
+                updateConcurrencyStats(totalPrefillSpeed, isEmbedding ? null : totalOutputSpeed);
                 generateCharts();
 
             } else {
@@ -3711,7 +3867,8 @@ async function processOllamaResponse(response, promptLength) {
             const apiUrl = document.getElementById('apiUrl').value.trim();
             currentModelName = document.getElementById('modelName').value.trim();
             api_key = document.getElementById('apiKey').value.trim();
-            notes = document.getElementById('notes').value.trim() || `无用户备注，接口: ${currentApiType === 'openai' ? 'OpenAI兼容接口' : 'Ollama接口'} ，模型: ${currentModelName}`;
+            const defaultApiLabel = getApiTypeLabel(currentApiType, translations[currentLang]);
+            notes = document.getElementById('notes').value.trim() || `无用户备注，接口: ${defaultApiLabel} ，模型: ${currentModelName}`;
             const minLength = parseInt(document.getElementById('minLength').value, 10);
             const maxLength = parseInt(document.getElementById('maxLength').value, 10);
             const baseStep = parseInt(document.getElementById('step').value, 10);
@@ -3775,7 +3932,8 @@ async function processOllamaResponse(response, promptLength) {
             }
 
             // 验证输入
-            if (!apiUrl || !currentModelName || !minLength || !maxLength || !step || !outputLength || !timeout) {
+            const requiresOutputLength = !isEmbeddingType(currentApiType);
+            if (!apiUrl || !currentModelName || !minLength || !maxLength || !step || !timeout || (requiresOutputLength && !outputLength)) {
                 alert("请填写所有必填的配置参数！");
                 return;
             }
@@ -3838,15 +3996,7 @@ async function processOllamaResponse(response, promptLength) {
             resultsDiv.appendChild(table);
 
             const headerRow = document.createElement('tr');
-            [
-                t.tableHeaderPromptLen,
-                t.tableHeaderTTFT,
-                t.tableHeaderITL,
-                t.tableHeaderPrefillSpeed,
-                t.tableHeaderOutputSpeed,
-                t.tableHeaderStatus,
-                t.tableHeaderDetail
-            ].forEach(text => {
+            getTableHeadersForApiType(currentApiType, t).forEach(text => {
                 const th = document.createElement('th');
                 th.innerHTML = text;
                 headerRow.appendChild(th);
@@ -3868,6 +4018,10 @@ async function processOllamaResponse(response, promptLength) {
             try {
                 if (currentApiType === 'openai') {
                     await testOpenAI(apiUrl, currentModelName, minLength, maxLength, 128, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout);
+                } else if (currentApiType === 'openai_embedding') {
+                    await testEmbedding(apiUrl, currentModelName, minLength, maxLength, 128, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout);
+                } else if (currentApiType === 'ollama_embedding') {
+                    await testOllamaEmbedding(apiUrl, currentModelName, minLength, maxLength, 128, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout);
                 } else {
                     await testOllama(apiUrl, currentModelName, minLength, maxLength, 128, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout);
                 }
@@ -3928,11 +4082,12 @@ async function processOllamaResponse(response, promptLength) {
             isTestingRunning = false; //
 
             // 生成Markdown表格
-            const apiTypeText = currentApiType === 'openai' ? t.apiOpenAI : t.apiOllama;
+            const apiTypeText = getApiTypeLabel(currentApiType, t);
             let markdownTable = `## ${t.mdTestResults} (${apiTypeText} - ${currentModelName})\n\n`;
             markdownTable += `${t.mdNotes}${notes} | ${t.mdConcurrency} ${concurrency}\n\n`;
-            markdownTable += `| ${t.tableHeaderPromptLen.replace('<br>', ' ')} | ${t.tableHeaderTTFT.replace('<br>', ' ')} | ${t.tableHeaderITL.replace('<br>', ' ')} | ${t.tableHeaderPrefillSpeed.replace('<br>', ' ')} | ${t.tableHeaderOutputSpeed.replace('<br>', ' ')} | ${t.tableHeaderStatus.replace('<br>', ' ')} |\n`;
-            markdownTable += `|---------------------|-------------------|-------------------|-------------------------|---------------------|---------------------|\n`;
+            const markdownHeaders = getTableHeadersForApiType(currentApiType, t).map(h => h.replace('<br>', ' '));
+            markdownTable += `| ${markdownHeaders.join(' | ')} |\n`;
+            markdownTable += `|${markdownHeaders.map(() => '---------------------').join('|')}|\n`;
 
             testResultsData.forEach(res => {
                 // Markdown 中也显示 N/A
@@ -3958,7 +4113,7 @@ async function processOllamaResponse(response, promptLength) {
 
         exportCSVBtn.addEventListener('click', () => {
             const t = translations[currentLang];
-            const apiTypeText = currentApiType === 'openai' ? t.apiOpenAI : t.apiOllama;
+            const apiTypeText = getApiTypeLabel(currentApiType, t);
             // 添加UTF-8 BOM解决Excel乱码问题
             let csvContent = "\uFEFF";
             csvContent += `${apiTypeText}, ${currentModelName}\n`;
@@ -5298,10 +5453,19 @@ async function processOllamaResponse(response, promptLength) {
                 activeOption.classList.add('active');
             }
             updateApiDescription(savedApiType);
+            applyApiTypeUi(savedApiType);
 
             // 如果 localStorage 有数据则使用，否则使用默认数据
-            document.getElementById('apiUrl').value = savedApiUrl || ((savedApiType === 'openai') ? d_openai_apiUrl : d_ollama_apiUrl);
-            document.getElementById('modelName').value = savedModelName || ((savedApiType === 'openai') ? d_openai_modelName : d_ollama_modelName);
+            if (savedApiType === 'openai_embedding') {
+                document.getElementById('apiUrl').value = savedApiUrl || d_openai_embedding_apiUrl;
+                document.getElementById('modelName').value = savedModelName || d_openai_embedding_modelName;
+            } else if (savedApiType === 'ollama_embedding') {
+                document.getElementById('apiUrl').value = savedApiUrl || d_ollama_embedding_apiUrl;
+                document.getElementById('modelName').value = savedModelName || d_ollama_embedding_modelName;
+            } else {
+                document.getElementById('apiUrl').value = savedApiUrl || ((savedApiType === 'openai') ? d_openai_apiUrl : d_ollama_apiUrl);
+                document.getElementById('modelName').value = savedModelName || ((savedApiType === 'openai') ? d_openai_modelName : d_ollama_modelName);
+            }
             document.getElementById('apiKey').value = savedApiKey || d_api_key;
             document.getElementById('notes').value = savedNotes || '';
             document.getElementById('minLength').value = savedMinLength || d_minLength;
@@ -5382,7 +5546,7 @@ async function processOllamaResponse(response, promptLength) {
                 const recordDiv = document.createElement('div');
                 recordDiv.className = 'history-record';
 
-                const apiTypeText = record.config.apiType === 'openai' ? t.apiOpenAI : t.apiOllama;
+                const apiTypeText = getApiTypeLabel(record.config.apiType, t);
 
                 recordDiv.innerHTML = `
                     <div class="history-record-checkbox">
@@ -5465,7 +5629,7 @@ async function processOllamaResponse(response, promptLength) {
             backToHistoryListBtn.textContent = t.historyBtnBack;
 
             const detailContent = document.getElementById('historyDetailContent');
-            const apiTypeText = record.config.apiType === 'openai' ? t.apiOpenAI : t.apiOllama;
+            const apiTypeText = getApiTypeLabel(record.config.apiType, t);
 
             // 创建详情HTML
             let html = `
@@ -5565,6 +5729,7 @@ async function processOllamaResponse(response, promptLength) {
                     activeOption.classList.add('active');
                 }
                 updateApiDescription(apiType);
+                applyApiTypeUi(apiType);
 
                 // 填充其他字段
                 document.getElementById('apiUrl').value = record.config.apiUrl || '';
@@ -5613,15 +5778,7 @@ async function processOllamaResponse(response, promptLength) {
 
             // 创建表头
             const headerRow = document.createElement('tr');
-            [
-                t.tableHeaderPromptLen,
-                t.tableHeaderTTFT,
-                t.tableHeaderITL,
-                t.tableHeaderPrefillSpeed,
-                t.tableHeaderOutputSpeed,
-                t.tableHeaderStatus,
-                t.tableHeaderDetail
-            ].forEach(text => {
+            getTableHeadersForApiType(record.config.apiType, t).forEach(text => {
                 const th = document.createElement('th');
                 th.innerHTML = text;
                 headerRow.appendChild(th);
@@ -5692,7 +5849,7 @@ async function processOllamaResponse(response, promptLength) {
                 return;
             }
 
-            const apiTypeText = record.config.apiType === 'openai' ? t.apiOpenAI : t.apiOllama;
+            const apiTypeText = getApiTypeLabel(record.config.apiType, t);
             // 添加UTF-8 BOM解决Excel乱码问题
             let csvContent = "\uFEFF";
             csvContent += `${apiTypeText}, ${record.config.modelName}\n`;
