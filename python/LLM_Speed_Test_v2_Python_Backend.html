@@ -1117,6 +1117,10 @@
                     <label for="frequencyPenaltyInput">Frequency Penalty</label>
                     <input type="number" id="frequencyPenaltyInput" value="" step="0.1" min="-2" max="2">
                 </div>
+                <div class="form-group">
+                    <label for="numCtx">num_ctx</label>
+                    <input type="number" id="numCtx" value="" min="0" step="256" placeholder="仅Ollama使用，留空为默认">
+                </div>
             </div>
         </div>
 
@@ -1285,6 +1289,8 @@
                 labelOutputLength: '期望输出长度',
                 labelConcurrency: '并发数',
                 labelTimeout: '请求超时 (ms)',
+                labelNumCtx: 'num_ctx (仅Ollama)',
+                placeholderNumCtx: '仅Ollama使用，留空为默认',
                 sectionExecTest: '执行测试',
                 btnStartTest: '开始测试',
                 btnStopTest: '停止测试',
@@ -1303,12 +1309,18 @@
                 chartItlTitle: 'Token间延迟 (ITL) - 平均值与抖动',
                 chartPrefillPercentileTitle: '📊 百分位统计 (P50/P90/P95) - Prefill吞吐',
                 chartDecodePercentileTitle: '📊 百分位统计 (P50/P90/P95) - Decode吞吐',
+                chartEmbeddingThroughputTitle: 'Embedding 吞吐',
+                chartEmbeddingLatencyTitle: 'Embedding 延迟',
+                chartEmbeddingPercentileTitle: '📊 百分位统计 (P50/P90/P95) - Embedding吞吐',
                 chartComparisonPrefillTitle: '对比 - 预填充 (Prefill) 吞吐',
                 chartComparisonDecodeTitle: '对比 - 输出 (Decode) 吞吐',
                 chartComparisonTtftTitle: '对比 - 首Token时间 (TTFT)',
                 chartComparisonItlTitle: '对比 - Token间延迟 (ITL)',
                 chartComparisonPrefillPercentileTitle: '对比 - Prefill吞吐百分位统计',
                 chartComparisonDecodePercentileTitle: '对比 - Decode吞吐百分位统计',
+                chartComparisonEmbeddingThroughputTitle: '对比 - Embedding 吞吐',
+                chartComparisonEmbeddingLatencyTitle: '对比 - Embedding 延迟',
+                chartComparisonEmbeddingPercentileTitle: '对比 - Embedding吞吐百分位统计',
                 chartAxisTime: '时间 (ms)',
                 btnExportComparisonChart: '导出一张对比图',
                 btnScreenshotComparison: '截图Prefill&Decode结果',
@@ -1397,14 +1409,18 @@
                 // 图表相关
                 chartLabelPrefillThroughput: '总预填充吞吐 (tokens/s)',
                 chartLabelDecodeThroughput: '总输出吞吐 (tokens/s)',
+                chartLabelEmbeddingThroughput: 'Embedding 吞吐 (tokens/s)',
                 chartTitlePrefillThroughput: '总预填充 (Prefill) 吞吐',
                 chartTitleDecodeThroughput: '总输出 (Decode) 吞吐',
+                chartTitleEmbeddingThroughput: 'Embedding 吞吐',
+                chartTitleEmbeddingLatency: 'Embedding 延迟',
                 chartConcurrency: '并发',
                 chartExportTitle: '性能测试图表',
                 chartAxisPromptLen: '提示词长度 (tokens)',
                 chartAxisThroughput: '吞吐 (tokens/s)',
                 chartComparisonPrefillThroughput: '对比 - 总预填充 (Prefill) 吞吐',
                 chartComparisonDecodeThroughput: '对比 - 总输出 (Decode) 吞吐',
+                chartComparisonEmbeddingThroughput: '对比 - Embedding 吞吐',
                 // Markdown / CSV
                 mdTestResults: '测试结果',
                 mdNotes: '备注：',
@@ -1412,7 +1428,7 @@
                 csvConcurrency: '并发数：',
                 csvHeaders: '提示词长度(tokens),TTFT(ms),ITL平均(ms),ITL标准差(ms),预填充耗时(ms),预填充速度(tokens/s),输出长度(tokens),输出耗时(ms),输出速度(tokens/s),状态',
                 // 错误消息和提示
-                errMissingColumns: 'CSV文件缺少必要的列 (提示词长度, 预填充速度, 输出速度)',
+                errMissingColumns: 'CSV文件缺少必要的列 (提示词长度, 预填充速度/Embedding吞吐)',
                 errHttpError: 'HTTP错误! 状态:',
                 alertMarkdownCopied: 'Markdown表格已复制到剪贴板！',
                 alertScreenshotSuccess: '✓ 截图已复制到剪贴板！',
@@ -1523,6 +1539,8 @@
                 labelOutputLength: 'Expected Output Length',
                 labelConcurrency: 'Concurrency',
                 labelTimeout: 'Request Timeout (ms)',
+                labelNumCtx: 'num_ctx (Ollama only)',
+                placeholderNumCtx: 'Ollama only, leave empty for default',
                 sectionExecTest: 'Execute Test',
                 btnStartTest: 'Start Test',
                 btnStopTest: 'Stop Test',
@@ -1541,12 +1559,18 @@
                 chartItlTitle: 'Inter-Token Latency (ITL) - Mean & Jitter',
                 chartPrefillPercentileTitle: '📊 Percentile Stats (P50/P90/P95) - Prefill Throughput',
                 chartDecodePercentileTitle: '📊 Percentile Stats (P50/P90/P95) - Decode Throughput',
+                chartEmbeddingThroughputTitle: 'Embedding Throughput',
+                chartEmbeddingLatencyTitle: 'Embedding Latency',
+                chartEmbeddingPercentileTitle: '📊 Percentile Stats (P50/P90/P95) - Embedding Throughput',
                 chartComparisonPrefillTitle: 'Comparison - Prefill Throughput',
                 chartComparisonDecodeTitle: 'Comparison - Decode Throughput',
                 chartComparisonTtftTitle: 'Comparison - TTFT (Time to First Token)',
                 chartComparisonItlTitle: 'Comparison - ITL (Inter-Token Latency)',
                 chartComparisonPrefillPercentileTitle: 'Comparison - Prefill Throughput Percentiles',
                 chartComparisonDecodePercentileTitle: 'Comparison - Decode Throughput Percentiles',
+                chartComparisonEmbeddingThroughputTitle: 'Comparison - Embedding Throughput',
+                chartComparisonEmbeddingLatencyTitle: 'Comparison - Embedding Latency',
+                chartComparisonEmbeddingPercentileTitle: 'Comparison - Embedding Throughput Percentiles',
                 chartAxisTime: 'Time (ms)',
                 btnExportComparisonChart: 'Export Comparison Chart',
                 btnScreenshotComparison: 'Screenshot Prefill&Decode',
@@ -1635,14 +1659,18 @@
                 // Chart related
                 chartLabelPrefillThroughput: 'Total Prefill Throughput (tokens/s)',
                 chartLabelDecodeThroughput: 'Total Decode Throughput (tokens/s)',
+                chartLabelEmbeddingThroughput: 'Embedding Throughput (tokens/s)',
                 chartTitlePrefillThroughput: 'Total Prefill Throughput',
                 chartTitleDecodeThroughput: 'Total Decode Throughput',
+                chartTitleEmbeddingThroughput: 'Embedding Throughput',
+                chartTitleEmbeddingLatency: 'Embedding Latency',
                 chartConcurrency: 'Concurrency',
                 chartExportTitle: 'Performance Test Chart',
                 chartAxisPromptLen: 'Prompt Length (tokens)',
                 chartAxisThroughput: 'Throughput (tokens/s)',
                 chartComparisonPrefillThroughput: 'Comparison - Total Prefill Throughput',
                 chartComparisonDecodeThroughput: 'Comparison - Total Decode Throughput',
+                chartComparisonEmbeddingThroughput: 'Comparison - Embedding Throughput',
                 // Markdown / CSV
                 mdTestResults: 'Test Results',
                 mdNotes: 'Notes:',
@@ -1650,7 +1678,7 @@
                 csvConcurrency: 'Concurrency:',
                 csvHeaders: 'Prompt Length(tokens),TTFT(ms),ITL Mean(ms),ITL Std(ms),Prefill Time(ms),Prefill Speed(tokens/s),Output Length(tokens),Output Time(ms),Output Speed(tokens/s),Status',
                 // Error messages and alerts
-                errMissingColumns: 'CSV file missing required columns (Prompt Length, Prefill Speed, Output Speed)',
+                errMissingColumns: 'CSV file missing required columns (Prompt Length, Prefill Speed/Embedding Throughput)',
                 errHttpError: 'HTTP Error! Status:',
                 alertMarkdownCopied: 'Markdown table copied to clipboard!',
                 alertScreenshotSuccess: '✓ Screenshot copied to clipboard!',
@@ -1772,6 +1800,8 @@
             document.querySelector('label[for="outputLength"]').textContent = t.labelOutputLength;
             document.querySelector('label[for="concurrency"]').textContent = t.labelConcurrency;
             document.querySelector('label[for="timeout"]').textContent = t.labelTimeout;
+            document.querySelector('label[for="numCtx"]').textContent = t.labelNumCtx;
+            document.getElementById('numCtx').placeholder = t.placeholderNumCtx;
             document.querySelector('label[for="importFiles"]').textContent = t.labelImportFiles;
 
             // 更新按钮
@@ -1789,20 +1819,7 @@
             document.querySelector('.config-section p.notes').textContent = t.comparisonNote;
 
             // 更新图表标题
-            document.getElementById('chartPrefillTitle').textContent = t.chartPrefillTitle;
-            document.getElementById('chartDecodeTitle').textContent = t.chartDecodeTitle;
-            document.getElementById('chartTtftTitle').textContent = t.chartTtftTitle;
-            document.getElementById('chartItlTitle').textContent = t.chartItlTitle;
-            document.getElementById('chartPrefillPercentileTitle').textContent = t.chartPrefillPercentileTitle;
-            document.getElementById('chartDecodePercentileTitle').textContent = t.chartDecodePercentileTitle;
-
-            // 更新对比图表标题
-            document.getElementById('comparisonPrefillTitle').textContent = t.chartComparisonPrefillTitle;
-            document.getElementById('comparisonDecodeTitle').textContent = t.chartComparisonDecodeTitle;
-            document.getElementById('comparisonTtftTitle').textContent = t.chartComparisonTtftTitle;
-            document.getElementById('comparisonItlTitle').textContent = t.chartComparisonItlTitle;
-            document.getElementById('comparisonPrefillPercentileTitle').textContent = t.chartComparisonPrefillPercentileTitle;
-            document.getElementById('comparisonDecodePercentileTitle').textContent = t.chartComparisonDecodePercentileTitle;
+            updateChartTitlesForApiType(activeApiType);
 
             // 如果结果区域是等待状态，更新文本
             const resultsDiv = document.getElementById('results');
@@ -1844,6 +1861,7 @@
         let d_stepMultiplier = 1;                                                   // 步长倍数（指数增长：第n次步长 = 基础步长 × 倍数^n）
         let d_outputLength = 128;                                                   // 期望输出的文本长度
         let d_timeout = 30000;                                                      // 请求超时时间 (ms)
+        let d_num_ctx = '';                                                        // Ollama上下文长度（留空使用默认）
         // 文本生成采样参数 (浮点数)
         let d_temperature = 1.0;                                                    // 控制生成文本的随机性。值越高，文本越随机（0.0表示确定性，1.0表到较高随机性）
         let d_top_p = 0.1;                                                          // 控制生成文本的多样性。只考虑累积概率达到 top_p 的词汇（0.0-1.0）
@@ -1939,6 +1957,10 @@
             return apiType === 'openai_embedding' || apiType === 'ollama_embedding';
         }
 
+        function isOllamaType(apiType) {
+            return apiType === 'ollama' || apiType === 'ollama_embedding';
+        }
+
         function getApiTypeLabel(apiType, t) {
             if (apiType === 'openai') return t.apiOpenAI;
             if (apiType === 'openai_embedding') return t.apiEmbedding;
@@ -1954,12 +1976,66 @@
             const topPInput = document.getElementById('topPInput');
             const presencePenaltyInput = document.getElementById('presencePenaltyInput');
             const frequencyPenaltyInput = document.getElementById('frequencyPenaltyInput');
+            const numCtxInput = document.getElementById('numCtx');
 
             outputLengthInput.disabled = disableForEmbedding;
             temperatureInput.disabled = disableForEmbedding;
             topPInput.disabled = disableForEmbedding;
             presencePenaltyInput.disabled = disableForEmbedding;
             frequencyPenaltyInput.disabled = disableForEmbedding;
+            numCtxInput.disabled = !isOllamaType(apiType);
+            updateChartTitlesForApiType(apiType);
+            updateChartVisibilityForApiType(apiType);
+        }
+
+        function updateChartTitlesForApiType(apiType) {
+            const t = translations[currentLang];
+            const isEmbedding = isEmbeddingType(apiType);
+
+            document.getElementById('chartPrefillTitle').textContent = isEmbedding ? t.chartEmbeddingThroughputTitle : t.chartPrefillTitle;
+            document.getElementById('chartDecodeTitle').textContent = t.chartDecodeTitle;
+            document.getElementById('chartTtftTitle').textContent = isEmbedding ? t.chartEmbeddingLatencyTitle : t.chartTtftTitle;
+            document.getElementById('chartItlTitle').textContent = t.chartItlTitle;
+            document.getElementById('chartPrefillPercentileTitle').textContent = isEmbedding ? t.chartEmbeddingPercentileTitle : t.chartPrefillPercentileTitle;
+            document.getElementById('chartDecodePercentileTitle').textContent = t.chartDecodePercentileTitle;
+
+            document.getElementById('comparisonPrefillTitle').textContent = isEmbedding ? t.chartComparisonEmbeddingThroughputTitle : t.chartComparisonPrefillTitle;
+            document.getElementById('comparisonDecodeTitle').textContent = t.chartComparisonDecodeTitle;
+            document.getElementById('comparisonTtftTitle').textContent = isEmbedding ? t.chartComparisonEmbeddingLatencyTitle : t.chartComparisonTtftTitle;
+            document.getElementById('comparisonItlTitle').textContent = t.chartComparisonItlTitle;
+            document.getElementById('comparisonPrefillPercentileTitle').textContent = isEmbedding ? t.chartComparisonEmbeddingPercentileTitle : t.chartComparisonPrefillPercentileTitle;
+            document.getElementById('comparisonDecodePercentileTitle').textContent = t.chartComparisonDecodePercentileTitle;
+        }
+
+        function updateChartVisibilityForApiType(apiType) {
+            const isEmbedding = isEmbeddingType(apiType);
+            const displayDecode = isEmbedding ? 'none' : '';
+
+            document.getElementById('chartDecodeTitle').style.display = displayDecode;
+            const outputCanvas = document.getElementById('outputChart');
+            if (outputCanvas) outputCanvas.style.display = displayDecode;
+            document.getElementById('chartItlTitle').style.display = displayDecode;
+            const itlCanvas = document.getElementById('itlChart');
+            if (itlCanvas) itlCanvas.style.display = displayDecode;
+            document.getElementById('chartDecodePercentileTitle').style.display = displayDecode;
+            const decodePercentileCanvas = document.getElementById('percentileDecodeChart');
+            if (decodePercentileCanvas) decodePercentileCanvas.style.display = displayDecode;
+        }
+
+        function updateComparisonChartVisibility(hasOutputData, hasItlData) {
+            const outputDisplay = hasOutputData ? '' : 'none';
+            const itlDisplay = hasItlData ? '' : 'none';
+
+            document.getElementById('comparisonDecodeTitle').style.display = outputDisplay;
+            document.getElementById('comparisonOutputChart').style.display = outputDisplay;
+            document.getElementById('comparisonDecodePercentileTitle').style.display = outputDisplay;
+            document.getElementById('comparisonDecodePercentileChart').style.display = outputDisplay;
+            document.getElementById('comparisonItlTitle').style.display = itlDisplay;
+            document.getElementById('comparisonItlChart').style.display = itlDisplay;
+        }
+
+        function isCanvasVisible(canvas) {
+            return canvas && canvas.offsetParent !== null;
         }
 
         function getTableHeadersForApiType(apiType, t) {
@@ -3218,23 +3294,23 @@ async function processOllamaResponse(response, promptLength) {
 */
 
         // WebSocket-based test functions for Python backend
-        async function testOpenAI(apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout) {
-            return await testWithBackend('openai', apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout);
+        async function testOpenAI(apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout, num_ctx) {
+            return await testWithBackend('openai', apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout, num_ctx);
         }
 
-        async function testEmbedding(apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout) {
-            return await testWithBackend('openai_embedding', apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout);
+        async function testEmbedding(apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout, num_ctx) {
+            return await testWithBackend('openai_embedding', apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout, num_ctx);
         }
 
-        async function testOllamaEmbedding(apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout) {
-            return await testWithBackend('ollama_embedding', apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout);
+        async function testOllamaEmbedding(apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout, num_ctx) {
+            return await testWithBackend('ollama_embedding', apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout, num_ctx);
         }
 
-        async function testOllama(apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout) {
-            return await testWithBackend('ollama', apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout);
+        async function testOllama(apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout, num_ctx) {
+            return await testWithBackend('ollama', apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout, num_ctx);
         }
 
-        async function testWithBackend(apiType, apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout) {
+        async function testWithBackend(apiType, apiUrl, modelName, minLength, maxLength, step, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout, num_ctx) {
             const t = translations[currentLang];
             
             // Connect to Python backend WebSocket
@@ -3261,6 +3337,7 @@ async function processOllamaResponse(response, promptLength) {
                         output_length: outputLength,
                         concurrency: concurrency,
                         timeout: timeout,
+                        num_ctx: num_ctx,
                         temperature: temperature,
                         top_p: top_p,
                         presence_penalty: presence_penalty,
@@ -3903,6 +3980,9 @@ async function processOllamaResponse(response, promptLength) {
             
             const outputLength = parseInt(document.getElementById('outputLength').value, 10);
             const timeout = parseInt(document.getElementById('timeout').value, 10);
+            const numCtxRaw = document.getElementById('numCtx').value.trim();
+            const num_ctx = parseInt(numCtxRaw, 10);
+            const numCtxValue = Number.isNaN(num_ctx) ? 0 : num_ctx;
             const temperature = parseFloat(document.getElementById('temperatureInput').value);
             const top_p = parseFloat(document.getElementById('topPInput').value);
             const presence_penalty = parseFloat(document.getElementById('presencePenaltyInput').value);
@@ -3922,6 +4002,7 @@ async function processOllamaResponse(response, promptLength) {
                 localStorage.setItem('llmPerfTestOutputLength', outputLength);
                 localStorage.setItem('llmPerfTestConcurrency', concurrency);
                 localStorage.setItem('llmPerfTestTimeout', timeout);
+                localStorage.setItem('llmPerfTestNumCtx', numCtxRaw);
                 localStorage.setItem('llmPerfTestTemperature', temperature);
                 localStorage.setItem('llmPerfTestTopP', top_p);
                 localStorage.setItem('llmPerfTestPresencePenalty', presence_penalty);
@@ -4017,13 +4098,13 @@ async function processOllamaResponse(response, promptLength) {
 
             try {
                 if (currentApiType === 'openai') {
-                    await testOpenAI(apiUrl, currentModelName, minLength, maxLength, 128, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout);
+                    await testOpenAI(apiUrl, currentModelName, minLength, maxLength, 128, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout, numCtxValue);
                 } else if (currentApiType === 'openai_embedding') {
-                    await testEmbedding(apiUrl, currentModelName, minLength, maxLength, 128, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout);
+                    await testEmbedding(apiUrl, currentModelName, minLength, maxLength, 128, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout, numCtxValue);
                 } else if (currentApiType === 'ollama_embedding') {
-                    await testOllamaEmbedding(apiUrl, currentModelName, minLength, maxLength, 128, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout);
+                    await testOllamaEmbedding(apiUrl, currentModelName, minLength, maxLength, 128, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout, numCtxValue);
                 } else {
-                    await testOllama(apiUrl, currentModelName, minLength, maxLength, 128, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout);
+                    await testOllama(apiUrl, currentModelName, minLength, maxLength, 128, testLengths, outputLength, temperature, top_p, presence_penalty, frequency_penalty, concurrency, timeout, numCtxValue);
                 }
             } catch (e) {
                 console.error('测试过程中发生错误:', e);
@@ -4057,6 +4138,7 @@ async function processOllamaResponse(response, promptLength) {
                         topP: top_p,
                         presencePenalty: presence_penalty,
                         frequencyPenalty: frequency_penalty,
+                        numCtx: numCtxValue,
                         timeout: timeout,
                         notes: notes
                     };
@@ -4292,7 +4374,7 @@ async function processOllamaResponse(response, promptLength) {
             ];
 
             downloadMultipleCharts(
-                allCharts,
+                allCharts.filter(isCanvasVisible),
                 `Perf_${cleanModelName}_c${currentConcurrency}_${timestamp}.png`.substring(0, 200),
                 `${t.chartExportTitle} - ${currentModelName} - ${t.chartConcurrency}${currentConcurrency} - ${notes}` // 大标题
             );
@@ -4327,7 +4409,7 @@ async function processOllamaResponse(response, promptLength) {
             ];
 
             downloadMultipleCharts(
-                allComparisonCharts,
+                allComparisonCharts.filter(isCanvasVisible),
                 filename,
                 "性能对比图表" // 大标题
             );
@@ -4360,27 +4442,33 @@ async function processOllamaResponse(response, promptLength) {
                 }
                 tempContainer.appendChild(resultsClone);
                 
-                // 4. 添加Prefill图表标题和canvas
-                const prefillTitle = document.createElement('h3');
-                prefillTitle.textContent = t.chartPrefillTitle;
-                prefillTitle.style.cssText = 'margin-top: 25px; margin-bottom: 10px;';
-                tempContainer.appendChild(prefillTitle);
-                const prefillClone = prefillChartCanvas.cloneNode(true);
-                tempContainer.appendChild(prefillClone);
+                const isEmbedding = isEmbeddingType(currentApiType);
+                const primaryTitleText = isEmbedding ? t.chartEmbeddingThroughputTitle : t.chartPrefillTitle;
+                const secondaryTitleText = isEmbedding ? t.chartEmbeddingLatencyTitle : t.chartDecodeTitle;
+                const primaryCanvas = prefillChartCanvas;
+                const secondaryCanvas = isEmbedding ? ttftChartCanvas : outputChartCanvas;
+
+                // 4. 添加主图表标题和canvas
+                const primaryTitle = document.createElement('h3');
+                primaryTitle.textContent = primaryTitleText;
+                primaryTitle.style.cssText = 'margin-top: 25px; margin-bottom: 10px;';
+                tempContainer.appendChild(primaryTitle);
+                const primaryClone = primaryCanvas.cloneNode(true);
+                tempContainer.appendChild(primaryClone);
                 
-                // 5. 添加Decode图表标题和canvas
-                const decodeTitle = document.createElement('h3');
-                decodeTitle.textContent = t.chartDecodeTitle;
-                decodeTitle.style.cssText = 'margin-top: 25px; margin-bottom: 10px;';
-                tempContainer.appendChild(decodeTitle);
-                const decodeClone = outputChartCanvas.cloneNode(true);
-                tempContainer.appendChild(decodeClone);
+                // 5. 添加次图表标题和canvas
+                const secondaryTitle = document.createElement('h3');
+                secondaryTitle.textContent = secondaryTitleText;
+                secondaryTitle.style.cssText = 'margin-top: 25px; margin-bottom: 10px;';
+                tempContainer.appendChild(secondaryTitle);
+                const secondaryClone = secondaryCanvas.cloneNode(true);
+                tempContainer.appendChild(secondaryClone);
                 
                 // 6. 将canvas内容绘制到克隆的canvas上
-                const prefillCloneCtx = prefillClone.getContext('2d');
-                prefillCloneCtx.drawImage(prefillChartCanvas, 0, 0);
-                const decodeCloneCtx = decodeClone.getContext('2d');
-                decodeCloneCtx.drawImage(outputChartCanvas, 0, 0);
+                const primaryCloneCtx = primaryClone.getContext('2d');
+                primaryCloneCtx.drawImage(primaryCanvas, 0, 0);
+                const secondaryCloneCtx = secondaryClone.getContext('2d');
+                secondaryCloneCtx.drawImage(secondaryCanvas, 0, 0);
                 
                 // 7. 使用html2canvas截图（降低scale提高速度）
                 const canvas = await html2canvas(tempContainer, {
@@ -4461,6 +4549,14 @@ async function processOllamaResponse(response, promptLength) {
          * @returns {object} - 包含所有图表数据的对象
          */
         function formatDataForComparison(resultsArray, label) {
+            const toNumberOrNull = (value) => {
+                if (value === null || value === undefined || value === 'N/A') {
+                    return null;
+                }
+                const num = parseFloat(value);
+                return Number.isFinite(num) ? num : null;
+            };
+
             const data = {
                 label: label,
                 prefillData: [],    // {x: promptLength, y: speed}
@@ -4481,8 +4577,8 @@ async function processOllamaResponse(response, promptLength) {
 
                 if (!isNaN(promptLength)) {
                     // Prefill/Decode速度
-                    const prefillSpeed = res.prefillSpeed === 'N/A' ? null : parseFloat(res.prefillSpeed);
-                    const outputSpeed = res.outputSpeed === 'N/A' ? null : parseFloat(res.outputSpeed);
+                    const prefillSpeed = toNumberOrNull(res.prefillSpeed);
+                    const outputSpeed = toNumberOrNull(res.outputSpeed);
 
                     if (prefillSpeed !== null) {
                         data.prefillData.push({ x: promptLength, y: prefillSpeed });
@@ -4492,14 +4588,14 @@ async function processOllamaResponse(response, promptLength) {
                     }
 
                     // TTFT
-                    const ttft = res.avgTtftMs === 'N/A' ? null : parseFloat(res.avgTtftMs);
+                    const ttft = toNumberOrNull(res.avgTtftMs);
                     if (ttft !== null) {
                         data.ttftData.push({ x: promptLength, y: ttft });
                     }
 
                     // ITL
-                    const itlMean = res.avgItlMean === 'N/A' ? null : parseFloat(res.avgItlMean);
-                    const itlStd = res.avgItlStd === 'N/A' ? null : parseFloat(res.avgItlStd);
+                    const itlMean = toNumberOrNull(res.avgItlMean);
+                    const itlStd = toNumberOrNull(res.avgItlStd);
                     if (itlMean !== null) {
                         data.itlMeanData.push({ x: promptLength, y: itlMean });
                     }
@@ -4582,30 +4678,43 @@ async function processOllamaResponse(response, promptLength) {
             let prefillSpdIdx = headers.indexOf("预填充速度(tokens/s)");
             if (prefillSpdIdx === -1) prefillSpdIdx = headers.indexOf("Prefill Speed(tokens/s)");
 
+            let embeddingSpdIdx = headers.indexOf("Embedding吞吐(tokens/s)");
+            if (embeddingSpdIdx === -1) embeddingSpdIdx = headers.indexOf("Embedding吞吐 (tokens/s)");
+            if (embeddingSpdIdx === -1) embeddingSpdIdx = headers.indexOf("Embedding Throughput(tokens/s)");
+            if (embeddingSpdIdx === -1) embeddingSpdIdx = headers.indexOf("Embedding Throughput (tokens/s)");
+            if (prefillSpdIdx === -1 && embeddingSpdIdx !== -1) prefillSpdIdx = embeddingSpdIdx;
+
             let outputSpdIdx = headers.indexOf("输出速度(tokens/s)");
             if (outputSpdIdx === -1) outputSpdIdx = headers.indexOf("Output Speed(tokens/s)");
 
             // 新增：查找TTFT和ITL列索引
             let ttftIdx = headers.indexOf("TTFT(ms)");
+            let embeddingLatencyIdx = headers.indexOf("Embedding延迟(ms)");
+            if (embeddingLatencyIdx === -1) embeddingLatencyIdx = headers.indexOf("Embedding延迟 (ms)");
+            if (embeddingLatencyIdx === -1) embeddingLatencyIdx = headers.indexOf("Embedding Latency(ms)");
+            if (embeddingLatencyIdx === -1) embeddingLatencyIdx = headers.indexOf("Embedding Latency (ms)");
+            if (ttftIdx === -1) ttftIdx = embeddingLatencyIdx;
+
             let itlMeanIdx = headers.indexOf("ITL平均(ms)");
             if (itlMeanIdx === -1) itlMeanIdx = headers.indexOf("ITL Mean(ms)");
             let itlStdIdx = headers.indexOf("ITL标准差(ms)");
             if (itlStdIdx === -1) itlStdIdx = headers.indexOf("ITL Std(ms)");
 
-            if (lenIdx === -1 || prefillSpdIdx === -1 || outputSpdIdx === -1) {
+            if (lenIdx === -1 || prefillSpdIdx === -1) {
                 throw new Error(translations[currentLang].errMissingColumns);
             }
 
+            const maxIdx = Math.max(...[lenIdx, prefillSpdIdx, outputSpdIdx, ttftIdx, itlMeanIdx, itlStdIdx].filter(idx => idx !== -1));
             const results = [];
             for (let i = 4; i < cleanLines.length; i++) {
                 if (cleanLines[i].trim() === "") continue;
                 const values = cleanLines[i].split(',');
 
-                if (values.length > Math.max(lenIdx, prefillSpdIdx, outputSpdIdx)) {
+                if (values.length > maxIdx) {
                     results.push({
                         promptLength: values[lenIdx],
                         prefillSpeed: values[prefillSpdIdx],
-                        outputSpeed: values[outputSpdIdx],
+                        outputSpeed: outputSpdIdx !== -1 ? values[outputSpdIdx] : 'N/A',
                         // 新增TTFT和ITL字段
                         avgTtftMs: ttftIdx !== -1 ? values[ttftIdx] : 'N/A',
                         avgItlMean: itlMeanIdx !== -1 ? values[itlMeanIdx] : 'N/A',
@@ -4627,7 +4736,6 @@ async function processOllamaResponse(response, promptLength) {
         function generateComparisonCharts() {
             const comparisonChartContainer = document.getElementById('comparisonChartContainer');
             const compPrefillCanvas = document.getElementById('comparisonPrefillChart').getContext('2d');
-            const compOutputCanvas = document.getElementById('comparisonOutputChart').getContext('2d');
 
             if (comparisonData.length === 0) {
                 comparisonChartContainer.style.display = 'none';
@@ -4635,6 +4743,22 @@ async function processOllamaResponse(response, promptLength) {
             }
 
             comparisonChartContainer.style.display = 'block';
+            const hasOutputData = comparisonData.some(dataset => dataset.outputData && dataset.outputData.length > 0);
+            const hasItlData = comparisonData.some(dataset =>
+                (dataset.itlMeanData && dataset.itlMeanData.length > 0) ||
+                (dataset.itlStdData && dataset.itlStdData.length > 0)
+            );
+            const isEmbeddingComparison = !hasOutputData && !hasItlData;
+            const t = translations[currentLang];
+
+            updateComparisonChartVisibility(hasOutputData, hasItlData);
+
+            document.getElementById('comparisonPrefillTitle').textContent = isEmbeddingComparison ? t.chartComparisonEmbeddingThroughputTitle : t.chartComparisonPrefillTitle;
+            document.getElementById('comparisonTtftTitle').textContent = isEmbeddingComparison ? t.chartComparisonEmbeddingLatencyTitle : t.chartComparisonTtftTitle;
+            document.getElementById('comparisonPrefillPercentileTitle').textContent = isEmbeddingComparison ? t.chartComparisonEmbeddingPercentileTitle : t.chartComparisonPrefillPercentileTitle;
+            document.getElementById('comparisonDecodeTitle').textContent = t.chartComparisonDecodeTitle;
+            document.getElementById('comparisonItlTitle').textContent = t.chartComparisonItlTitle;
+            document.getElementById('comparisonDecodePercentileTitle').textContent = t.chartComparisonDecodePercentileTitle;
 
             // 定义一组颜色
             const colors = [
@@ -4655,7 +4779,7 @@ async function processOllamaResponse(response, promptLength) {
                 };
             });
 
-            const t = translations[currentLang];
+            const prefillChartTitle = isEmbeddingComparison ? t.chartComparisonEmbeddingThroughput : t.chartComparisonPrefillThroughput;
             if (comparisonPrefillChartInstance) comparisonPrefillChartInstance.destroy();
             comparisonPrefillChartInstance = new Chart(compPrefillCanvas, {
                 type: 'line',
@@ -4664,7 +4788,7 @@ async function processOllamaResponse(response, promptLength) {
                     responsive: true,
                     plugins: {
                         legend: { position: 'top' },
-                        title: { display: true, text: t.chartComparisonPrefillThroughput }
+                        title: { display: true, text: prefillChartTitle }
                     },
                     scales: {
                         x: {
@@ -4681,41 +4805,47 @@ async function processOllamaResponse(response, promptLength) {
             });
 
             // 2. 创建 Output 对比图表
-            const outputDatasets = comparisonData.map((dataset, index) => {
-                return {
-                    label: dataset.label,
-                    data: dataset.outputData,
-                    borderColor: colors[index % colors.length],
-                    backgroundColor: colors[index % colors.length] + '33',
-                    tension: 0.1,
-                    spanGaps: false,
-                    fill: false
-                };
-            });
+            if (hasOutputData) {
+                const outputDatasets = comparisonData.map((dataset, index) => {
+                    return {
+                        label: dataset.label,
+                        data: dataset.outputData,
+                        borderColor: colors[index % colors.length],
+                        backgroundColor: colors[index % colors.length] + '33',
+                        tension: 0.1,
+                        spanGaps: false,
+                        fill: false
+                    };
+                });
 
-            if (comparisonOutputChartInstance) comparisonOutputChartInstance.destroy();
-            comparisonOutputChartInstance = new Chart(compOutputCanvas, {
-                type: 'line',
-                data: { datasets: outputDatasets },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'top' },
-                        title: { display: true, text: t.chartComparisonDecodeThroughput }
-                    },
-                    scales: {
-                        x: {
-                            type: 'linear',
-                            position: 'bottom',
-                            title: { display: true, text: t.chartAxisPromptLen }
+                const compOutputCanvas = document.getElementById('comparisonOutputChart').getContext('2d');
+                if (comparisonOutputChartInstance) comparisonOutputChartInstance.destroy();
+                comparisonOutputChartInstance = new Chart(compOutputCanvas, {
+                    type: 'line',
+                    data: { datasets: outputDatasets },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'top' },
+                            title: { display: true, text: t.chartComparisonDecodeThroughput }
                         },
-                        y: {
-                            title: { display: true, text: t.chartAxisThroughput },
-                            beginAtZero: true
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                                title: { display: true, text: t.chartAxisPromptLen }
+                            },
+                            y: {
+                                title: { display: true, text: t.chartAxisThroughput },
+                                beginAtZero: true
+                            }
                         }
                     }
-                }
-            });
+                });
+            } else if (comparisonOutputChartInstance) {
+                comparisonOutputChartInstance.destroy();
+                comparisonOutputChartInstance = null;
+            }
 
             // 3. 创建 TTFT 对比图表
             const ttftDatasets = comparisonData.map((dataset, index) => {
@@ -4731,6 +4861,7 @@ async function processOllamaResponse(response, promptLength) {
             });
 
             const compTtftCanvas = document.getElementById('comparisonTtftChart').getContext('2d');
+            const ttftChartTitle = isEmbeddingComparison ? t.chartComparisonEmbeddingLatencyTitle : t.chartComparisonTtftTitle;
             if (comparisonTtftChartInstance) comparisonTtftChartInstance.destroy();
             comparisonTtftChartInstance = new Chart(compTtftCanvas, {
                 type: 'line',
@@ -4739,7 +4870,7 @@ async function processOllamaResponse(response, promptLength) {
                     responsive: true,
                     plugins: {
                         legend: { position: 'top' },
-                        title: { display: true, text: t.chartComparisonTtftTitle }
+                        title: { display: true, text: ttftChartTitle }
                     },
                     scales: {
                         x: {
@@ -4756,57 +4887,62 @@ async function processOllamaResponse(response, promptLength) {
             });
 
             // 4. 创建 ITL 对比图表（平均值和标准差）
-            const itlMeanDatasets = comparisonData.map((dataset, index) => {
-                return {
-                    label: dataset.label + ' (平均)',
-                    data: dataset.itlMeanData,
-                    borderColor: colors[index % colors.length],
-                    backgroundColor: colors[index % colors.length] + '33',
-                    tension: 0.1,
-                    spanGaps: false,
-                    fill: false,
-                    borderWidth: 2
-                };
-            });
+            if (hasItlData) {
+                const itlMeanDatasets = comparisonData.map((dataset, index) => {
+                    return {
+                        label: dataset.label + ' (平均)',
+                        data: dataset.itlMeanData,
+                        borderColor: colors[index % colors.length],
+                        backgroundColor: colors[index % colors.length] + '33',
+                        tension: 0.1,
+                        spanGaps: false,
+                        fill: false,
+                        borderWidth: 2
+                    };
+                });
 
-            const itlStdDatasets = comparisonData.map((dataset, index) => {
-                return {
-                    label: dataset.label + ' (标准差)',
-                    data: dataset.itlStdData,
-                    borderColor: colors[index % colors.length],
-                    backgroundColor: colors[index % colors.length] + '33',
-                    tension: 0.1,
-                    spanGaps: false,
-                    fill: false,
-                    borderWidth: 1,
-                    borderDash: [5, 5]  // 虚线
-                };
-            });
+                const itlStdDatasets = comparisonData.map((dataset, index) => {
+                    return {
+                        label: dataset.label + ' (标准差)',
+                        data: dataset.itlStdData,
+                        borderColor: colors[index % colors.length],
+                        backgroundColor: colors[index % colors.length] + '33',
+                        tension: 0.1,
+                        spanGaps: false,
+                        fill: false,
+                        borderWidth: 1,
+                        borderDash: [5, 5]  // 虚线
+                    };
+                });
 
-            const compItlCanvas = document.getElementById('comparisonItlChart').getContext('2d');
-            if (comparisonItlChartInstance) comparisonItlChartInstance.destroy();
-            comparisonItlChartInstance = new Chart(compItlCanvas, {
-                type: 'line',
-                data: { datasets: [...itlMeanDatasets, ...itlStdDatasets] },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'top' },
-                        title: { display: true, text: t.chartComparisonItlTitle }
-                    },
-                    scales: {
-                        x: {
-                            type: 'linear',
-                            position: 'bottom',
-                            title: { display: true, text: t.chartAxisPromptLen }
+                const compItlCanvas = document.getElementById('comparisonItlChart').getContext('2d');
+                if (comparisonItlChartInstance) comparisonItlChartInstance.destroy();
+                comparisonItlChartInstance = new Chart(compItlCanvas, {
+                    type: 'line',
+                    data: { datasets: [...itlMeanDatasets, ...itlStdDatasets] },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'top' },
+                            title: { display: true, text: t.chartComparisonItlTitle }
                         },
-                        y: {
-                            title: { display: true, text: t.chartAxisTime },
-                            beginAtZero: true
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                                title: { display: true, text: t.chartAxisPromptLen }
+                            },
+                            y: {
+                                title: { display: true, text: t.chartAxisTime },
+                                beginAtZero: true
+                            }
                         }
                     }
-                }
-            });
+                });
+            } else if (comparisonItlChartInstance) {
+                comparisonItlChartInstance.destroy();
+                comparisonItlChartInstance = null;
+            }
 
             // 5. 创建 Prefill 百分位对比图表
             const prefillP50Datasets = comparisonData.map((dataset, index) => {
@@ -4850,6 +4986,7 @@ async function processOllamaResponse(response, promptLength) {
             });
 
             const compPrefillPercentileCanvas = document.getElementById('comparisonPrefillPercentileChart').getContext('2d');
+            const prefillPercentileTitle = isEmbeddingComparison ? t.chartComparisonEmbeddingPercentileTitle : t.chartComparisonPrefillPercentileTitle;
             if (comparisonPrefillPercentileChartInstance) comparisonPrefillPercentileChartInstance.destroy();
             comparisonPrefillPercentileChartInstance = new Chart(compPrefillPercentileCanvas, {
                 type: 'line',
@@ -4858,7 +4995,7 @@ async function processOllamaResponse(response, promptLength) {
                     responsive: true,
                     plugins: {
                         legend: { position: 'top' },
-                        title: { display: true, text: t.chartComparisonPrefillPercentileTitle }
+                        title: { display: true, text: prefillPercentileTitle }
                     },
                     scales: {
                         x: {
@@ -4875,70 +5012,75 @@ async function processOllamaResponse(response, promptLength) {
             });
 
             // 6. 创建 Decode 百分位对比图表
-            const decodeP50Datasets = comparisonData.map((dataset, index) => {
-                return {
-                    label: dataset.label + ' (P50)',
-                    data: dataset.decodeP50Data,
-                    borderColor: colors[index % colors.length],
-                    backgroundColor: colors[index % colors.length] + '33',
-                    tension: 0.1,
-                    spanGaps: false,
-                    fill: false
-                };
-            });
+            if (hasOutputData) {
+                const decodeP50Datasets = comparisonData.map((dataset, index) => {
+                    return {
+                        label: dataset.label + ' (P50)',
+                        data: dataset.decodeP50Data,
+                        borderColor: colors[index % colors.length],
+                        backgroundColor: colors[index % colors.length] + '33',
+                        tension: 0.1,
+                        spanGaps: false,
+                        fill: false
+                    };
+                });
 
-            const decodeP90Datasets = comparisonData.map((dataset, index) => {
-                const color = colors[index % colors.length];
-                return {
-                    label: dataset.label + ' (P90)',
-                    data: dataset.decodeP90Data,
-                    borderColor: color,
-                    backgroundColor: color + '33',
-                    tension: 0.1,
-                    spanGaps: false,
-                    fill: false,
-                    borderDash: [5, 5]
-                };
-            });
+                const decodeP90Datasets = comparisonData.map((dataset, index) => {
+                    const color = colors[index % colors.length];
+                    return {
+                        label: dataset.label + ' (P90)',
+                        data: dataset.decodeP90Data,
+                        borderColor: color,
+                        backgroundColor: color + '33',
+                        tension: 0.1,
+                        spanGaps: false,
+                        fill: false,
+                        borderDash: [5, 5]
+                    };
+                });
 
-            const decodeP95Datasets = comparisonData.map((dataset, index) => {
-                const color = colors[index % colors.length];
-                return {
-                    label: dataset.label + ' (P95)',
-                    data: dataset.decodeP95Data,
-                    borderColor: color,
-                    backgroundColor: color + '33',
-                    tension: 0.1,
-                    spanGaps: false,
-                    fill: false,
-                    borderDash: [10, 5]
-                };
-            });
+                const decodeP95Datasets = comparisonData.map((dataset, index) => {
+                    const color = colors[index % colors.length];
+                    return {
+                        label: dataset.label + ' (P95)',
+                        data: dataset.decodeP95Data,
+                        borderColor: color,
+                        backgroundColor: color + '33',
+                        tension: 0.1,
+                        spanGaps: false,
+                        fill: false,
+                        borderDash: [10, 5]
+                    };
+                });
 
-            const compDecodePercentileCanvas = document.getElementById('comparisonDecodePercentileChart').getContext('2d');
-            if (comparisonDecodePercentileChartInstance) comparisonDecodePercentileChartInstance.destroy();
-            comparisonDecodePercentileChartInstance = new Chart(compDecodePercentileCanvas, {
-                type: 'line',
-                data: { datasets: [...decodeP50Datasets, ...decodeP90Datasets, ...decodeP95Datasets] },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'top' },
-                        title: { display: true, text: t.chartComparisonDecodePercentileTitle }
-                    },
-                    scales: {
-                        x: {
-                            type: 'linear',
-                            position: 'bottom',
-                            title: { display: true, text: t.chartAxisPromptLen }
+                const compDecodePercentileCanvas = document.getElementById('comparisonDecodePercentileChart').getContext('2d');
+                if (comparisonDecodePercentileChartInstance) comparisonDecodePercentileChartInstance.destroy();
+                comparisonDecodePercentileChartInstance = new Chart(compDecodePercentileCanvas, {
+                    type: 'line',
+                    data: { datasets: [...decodeP50Datasets, ...decodeP90Datasets, ...decodeP95Datasets] },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'top' },
+                            title: { display: true, text: t.chartComparisonDecodePercentileTitle }
                         },
-                        y: {
-                            title: { display: true, text: t.chartAxisThroughput },
-                            beginAtZero: true
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                                title: { display: true, text: t.chartAxisPromptLen }
+                            },
+                            y: {
+                                title: { display: true, text: t.chartAxisThroughput },
+                                beginAtZero: true
+                            }
                         }
                     }
-                }
-            });
+                });
+            } else if (comparisonDecodePercentileChartInstance) {
+                comparisonDecodePercentileChartInstance.destroy();
+                comparisonDecodePercentileChartInstance = null;
+            }
 
             // v1.8: 显示对比图表导出按钮
             exportComparisonChartBtn.style.display = 'block';
@@ -4987,6 +5129,12 @@ async function processOllamaResponse(response, promptLength) {
             }
 
             const t = translations[currentLang];
+            const isEmbedding = isEmbeddingType(currentApiType);
+            const prefillLabel = isEmbedding ? t.chartLabelEmbeddingThroughput : t.chartLabelPrefillThroughput;
+            const prefillTitle = isEmbedding ? t.chartTitleEmbeddingThroughput : t.chartTitlePrefillThroughput;
+            const ttftLabel = isEmbedding ? `${t.chartTitleEmbeddingLatency} (ms)` : 'TTFT (ms)';
+            const ttftTitle = isEmbedding ? t.chartTitleEmbeddingLatency : t.chartTtftTitle;
+            const prefillPercentileTitle = isEmbedding ? t.chartEmbeddingPercentileTitle : t.chartPrefillPercentileTitle;
             // 从数据中提取标签和数据集
             const labels = testResultsData.map(d => d.promptLength);
             // 将 'N/A' 转换为 null，以便 Chart.js 知道在何处断开线条
@@ -4999,6 +5147,10 @@ async function processOllamaResponse(response, promptLength) {
             if (prefillChartInstance) {
                 prefillChartInstance.data.labels = labels;
                 prefillChartInstance.data.datasets[0].data = prefillDataTotal;
+                prefillChartInstance.data.datasets[0].label = prefillLabel;
+                if (prefillChartInstance.options.plugins && prefillChartInstance.options.plugins.title) {
+                    prefillChartInstance.options.plugins.title.text = `${prefillTitle} - ${currentModelName} - ${t.chartConcurrency}${currentConcurrency} - ${notes}`;
+                }
                 prefillChartInstance.update('none');
             } else {
                 // 图表1: 预填充速度
@@ -5009,7 +5161,7 @@ async function processOllamaResponse(response, promptLength) {
                         labels: labels,
                         datasets: [
                             {
-                                label: t.chartLabelPrefillThroughput,
+                                label: prefillLabel,
                                 data: prefillDataTotal,
                                 borderColor: 'rgb(75, 192, 192)',
                                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -5027,7 +5179,7 @@ async function processOllamaResponse(response, promptLength) {
                             },
                             title: {
                                 display: true,
-                                text: `${t.chartTitlePrefillThroughput} - ${currentModelName} - ${t.chartConcurrency}${currentConcurrency} - ${notes}`
+                                text: `${prefillTitle} - ${currentModelName} - ${t.chartConcurrency}${currentConcurrency} - ${notes}`
                             }
                         },
                         scales: {
@@ -5053,6 +5205,10 @@ async function processOllamaResponse(response, promptLength) {
             if (outputChartInstance) {
                 outputChartInstance.data.labels = labels;
                 outputChartInstance.data.datasets[0].data = outputDataTotal;
+                outputChartInstance.data.datasets[0].label = t.chartLabelDecodeThroughput;
+                if (outputChartInstance.options.plugins && outputChartInstance.options.plugins.title) {
+                    outputChartInstance.options.plugins.title.text = `${t.chartTitleDecodeThroughput} - ${currentModelName} - ${t.chartConcurrency}${currentConcurrency} - ${notes}`;
+                }
                 outputChartInstance.update('none');
             } else {
                 const outputCtx = outputChartCanvas.getContext('2d');
@@ -5107,6 +5263,10 @@ async function processOllamaResponse(response, promptLength) {
             if (ttftChartInstance) {
                 ttftChartInstance.data.labels = labels;
                 ttftChartInstance.data.datasets[0].data = ttftData;
+                ttftChartInstance.data.datasets[0].label = ttftLabel;
+                if (ttftChartInstance.options.plugins && ttftChartInstance.options.plugins.title) {
+                    ttftChartInstance.options.plugins.title.text = `${ttftTitle} - ${currentModelName} - ${t.chartConcurrency}${currentConcurrency} - ${notes}`;
+                }
                 ttftChartInstance.update('none');
             } else {
                 const ttftCtx = ttftChartCanvas.getContext('2d');
@@ -5116,7 +5276,7 @@ async function processOllamaResponse(response, promptLength) {
                         labels: labels,
                         datasets: [
                             {
-                                label: 'TTFT (ms)',
+                                label: ttftLabel,
                                 data: ttftData,
                                 borderColor: 'rgb(153, 102, 255)',
                                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
@@ -5134,7 +5294,7 @@ async function processOllamaResponse(response, promptLength) {
                             },
                             title: {
                                 display: true,
-                                text: `首Token时间 (TTFT) - ${currentModelName} - ${t.chartConcurrency}${currentConcurrency} - ${notes}`
+                                text: `${ttftTitle} - ${currentModelName} - ${t.chartConcurrency}${currentConcurrency} - ${notes}`
                             }
                         },
                         scales: {
@@ -5257,6 +5417,9 @@ async function processOllamaResponse(response, promptLength) {
                 percentilePrefillChartInstance.data.datasets[0].data = prefillP50Data;
                 percentilePrefillChartInstance.data.datasets[1].data = prefillP90Data;
                 percentilePrefillChartInstance.data.datasets[2].data = prefillP95Data;
+                if (percentilePrefillChartInstance.options.plugins && percentilePrefillChartInstance.options.plugins.title) {
+                    percentilePrefillChartInstance.options.plugins.title.text = `${prefillPercentileTitle} - ${currentModelName} - ${t.chartConcurrency}${currentConcurrency} - ${notes}`;
+                }
                 percentilePrefillChartInstance.update('none');
             } else {
                 const percentilePrefillCtx = percentilePrefillChartCanvas.getContext('2d');
@@ -5302,7 +5465,7 @@ async function processOllamaResponse(response, promptLength) {
                             },
                             title: {
                                 display: true,
-                                text: `📊 Prefill吞吐百分位统计 - ${currentModelName} - ${t.chartConcurrency}${currentConcurrency} - ${notes}`
+                                text: `${prefillPercentileTitle} - ${currentModelName} - ${t.chartConcurrency}${currentConcurrency} - ${notes}`
                             }
                         },
                         scales: {
@@ -5358,6 +5521,9 @@ async function processOllamaResponse(response, promptLength) {
                 percentileDecodeChartInstance.data.datasets[0].data = decodeP50Data;
                 percentileDecodeChartInstance.data.datasets[1].data = decodeP90Data;
                 percentileDecodeChartInstance.data.datasets[2].data = decodeP95Data;
+                if (percentileDecodeChartInstance.options.plugins && percentileDecodeChartInstance.options.plugins.title) {
+                    percentileDecodeChartInstance.options.plugins.title.text = `${t.chartDecodePercentileTitle} - ${currentModelName} - ${t.chartConcurrency}${currentConcurrency} - ${notes}`;
+                }
                 percentileDecodeChartInstance.update('none');
             } else {
                 const percentileDecodeCtx = percentileDecodeChartCanvas.getContext('2d');
@@ -5403,7 +5569,7 @@ async function processOllamaResponse(response, promptLength) {
                             },
                             title: {
                                 display: true,
-                                text: `📊 Decode吞吐百分位统计 - ${currentModelName} - ${t.chartConcurrency}${currentConcurrency} - ${notes}`
+                                text: `${t.chartDecodePercentileTitle} - ${currentModelName} - ${t.chartConcurrency}${currentConcurrency} - ${notes}`
                             }
                         },
                         scales: {
@@ -5441,6 +5607,7 @@ async function processOllamaResponse(response, promptLength) {
             const savedOutputLength = localStorage.getItem('llmPerfTestOutputLength');
             const savedConcurrency = localStorage.getItem('llmPerfTestConcurrency');
             const savedTimeout = localStorage.getItem('llmPerfTestTimeout');
+            const savedNumCtx = localStorage.getItem('llmPerfTestNumCtx');
             const savedTemperature = localStorage.getItem('llmPerfTestTemperature');
             const savedTopP = localStorage.getItem('llmPerfTestTopP');
             const savedPresencePenalty = localStorage.getItem('llmPerfTestPresencePenalty');
@@ -5475,6 +5642,7 @@ async function processOllamaResponse(response, promptLength) {
             document.getElementById('outputLength').value = savedOutputLength || d_outputLength;
             document.getElementById('concurrency').value = savedConcurrency || 1;
             document.getElementById('timeout').value = savedTimeout || d_timeout;
+            document.getElementById('numCtx').value = savedNumCtx || d_num_ctx;
             document.getElementById('temperatureInput').value = savedTemperature || d_temperature;
             document.getElementById('topPInput').value = savedTopP || d_top_p;
             document.getElementById('presencePenaltyInput').value = savedPresencePenalty || d_presence_penalty;
@@ -5644,6 +5812,7 @@ async function processOllamaResponse(response, promptLength) {
                         <li>${t.historyRecordConcurrency} ${record.config.concurrency}</li>
                         <li>${t.historyRecordPromptRange} ${record.config.minLength}-${record.config.maxLength} (step ${record.config.step})</li>
                         <li>${t.historyRecordOutputLen} ${record.config.outputLength}</li>
+                        <li>num_ctx: ${record.config.numCtx && record.config.numCtx > 0 ? record.config.numCtx : 'N/A'}</li>
                         <li>Temperature: ${record.config.temperature}, Top P: ${record.config.topP}</li>
                         <li>Timeout: ${record.config.timeout}ms</li>
                     </ul>
@@ -5745,6 +5914,7 @@ async function processOllamaResponse(response, promptLength) {
                 document.getElementById('presencePenaltyInput').value = record.config.presencePenalty !== undefined ? record.config.presencePenalty : '';
                 document.getElementById('frequencyPenaltyInput').value = record.config.frequencyPenalty !== undefined ? record.config.frequencyPenalty : '';
                 document.getElementById('timeout').value = record.config.timeout || '';
+                document.getElementById('numCtx').value = record.config.numCtx || '';
             }
             // 填充备注字段
             document.getElementById('notes').value = record.notes || '';
@@ -6068,6 +6238,7 @@ async function processOllamaResponse(response, promptLength) {
             document.getElementById('outputLength').value = d_outputLength;
             document.getElementById('concurrency').value = 1;
             document.getElementById('timeout').value = d_timeout;
+            document.getElementById('numCtx').value = d_num_ctx;
             document.getElementById('temperatureInput').value = d_temperature;
             document.getElementById('topPInput').value = d_top_p;
             document.getElementById('presencePenaltyInput').value = d_presence_penalty;

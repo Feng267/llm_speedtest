@@ -6,6 +6,7 @@ import asyncio
 import time
 import json
 import random
+import datetime
 from typing import List, Dict, Any
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
@@ -87,6 +88,7 @@ class TestConfig(BaseModel):
     output_length: int
     concurrency: int
     timeout: int
+    num_ctx: int = 0
     temperature: float = 0.7
     top_p: float = 0.9
     presence_penalty: float = 0.0
@@ -139,6 +141,59 @@ def redact_config_for_log(config_data: Dict[str, Any]) -> Dict[str, Any]:
     if "api_key" in safe_config:
         safe_config["api_key"] = mask_secret(safe_config["api_key"])
     return safe_config
+
+
+class DailyLogWriter:
+    def __init__(self, log_dir: str, stream):
+        self.log_dir = log_dir
+        self.stream = stream
+        self.current_date = None
+        self.file = None
+
+    def _open_if_needed(self) -> None:
+        today = datetime.date.today()
+        if self.current_date != today:
+            if self.file:
+                try:
+                    self.file.close()
+                except Exception:
+                    pass
+            os.makedirs(self.log_dir, exist_ok=True)
+            log_path = os.path.join(self.log_dir, today.strftime("%Y-%m-%d"))
+            self.file = open(log_path, "a", encoding="utf-8", buffering=1)
+            self.current_date = today
+
+    def write(self, data) -> None:
+        if data is None:
+            return
+        if isinstance(data, bytes):
+            data = data.decode("utf-8", errors="replace")
+        if data == "":
+            return
+        self._open_if_needed()
+        if self.file:
+            self.file.write(data)
+        self.stream.write(data)
+        self.stream.flush()
+
+    def flush(self) -> None:
+        if self.file:
+            self.file.flush()
+        self.stream.flush()
+
+    def isatty(self) -> bool:
+        if hasattr(self.stream, "isatty"):
+            return self.stream.isatty()
+        return False
+
+    def fileno(self) -> int:
+        if hasattr(self.stream, "fileno"):
+            return self.stream.fileno()
+        raise OSError("fileno not supported")
+
+    @property
+    def encoding(self) -> str:
+        return getattr(self.stream, "encoding", "utf-8")
 
 
 def calculate_dynamic_timeout(prompt_length: int, base_timeout: int) -> int:
@@ -353,6 +408,7 @@ async def execute_ollama_embedding_request(
     model_name: str,
     prompt_length: int,
     timeout: int,
+    num_ctx: int = 0,
     seed: int = 0,
 ) -> Dict[str, Any]:
     """执行Ollama Embedding测试请求（/api/embeddings 或 /api/embed）"""
@@ -366,6 +422,10 @@ async def execute_ollama_embedding_request(
 
     api_url_clean = api_url.rstrip("/")
     use_embed_endpoint = api_url_clean.endswith("/api/embed")
+    options = {}
+    if num_ctx and num_ctx > 0:
+        options["num_ctx"] = num_ctx
+
     if use_embed_endpoint:
         payload = {
             "model": model_name,
@@ -376,6 +436,8 @@ async def execute_ollama_embedding_request(
             "model": model_name,
             "prompt": prompt_text
         }
+    if options:
+        payload["options"] = options
 
     start_time = time.perf_counter()
     timeout_seconds = timeout / 1000.0
@@ -485,6 +547,7 @@ async def execute_single_request(
     prompt_length: int,
     output_length: int,
     timeout: int,
+    num_ctx: int,
     temperature: float,
     top_p: float,
     presence_penalty: float,
@@ -511,6 +574,7 @@ async def execute_single_request(
             model_name=model_name,
             prompt_length=prompt_length,
             timeout=timeout,
+            num_ctx=num_ctx,
             seed=seed,
         )
 
@@ -553,6 +617,8 @@ async def execute_single_request(
             },
             "stream": True
         }
+        if num_ctx and num_ctx > 0:
+            payload["options"]["num_ctx"] = num_ctx
     
     start_time = time.perf_counter()
     first_chunk_time = None  # 第一个chunk到达时间（prefill结束）
@@ -1028,6 +1094,7 @@ async def websocket_test_endpoint(websocket: WebSocket):
                     prompt_length=length,
                     output_length=config.output_length,
                     timeout=dynamic_timeout,  # 使用动态计算的超时
+                    num_ctx=config.num_ctx,
                     temperature=config.temperature,
                     top_p=config.top_p,
                     presence_penalty=config.presence_penalty,
@@ -1146,6 +1213,11 @@ if __name__ == "__main__":
     import uvicorn
     import sys
     
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    log_dir = os.path.join(script_dir, "logs")
+    sys.stdout = DailyLogWriter(log_dir, sys.__stdout__)
+    sys.stderr = DailyLogWriter(log_dir, sys.__stderr__)
+
     if len(sys.argv) > 1 and sys.argv[1].isdigit():
         port = int(sys.argv[1])
     else:
@@ -1161,7 +1233,6 @@ if __name__ == "__main__":
     
     # 将端口写入配置文件，供bat脚本读取
     try:
-        script_dir = os.path.dirname(os.path.abspath(__file__))
         port_file = os.path.join(script_dir, '.backend_port')
         with open(port_file, 'w') as f:
             f.write(str(port))

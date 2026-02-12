@@ -236,6 +236,12 @@
     # 打开 LLM_Speed_Test_v2_Python_Backend.html
     ```
 
+    **macOS 本地（使用虚拟环境 .venv）示例：**
+    ```bash
+    cd /Users/workspace-llm/llm_speedtest/python
+    ./.venv/bin/python llm_test_backend.py
+    ```
+
 4.  **详细文档**：查看 [python/README_Backend.md](python/README_Backend.md) 获取完整说明
 
 ---

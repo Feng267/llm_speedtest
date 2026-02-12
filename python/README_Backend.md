@@ -67,6 +67,12 @@ cd python
 python llm_test_backend.py
 ```
 
+**macOS 本地（使用虚拟环境 .venv）示例：**
+```bash
+cd /Users/workspace-llm/llm_speedtest/python
+./.venv/bin/python llm_test_backend.py
+```
+
 后端服务将运行在 `http://localhost:18000` (默认端口，可自动调整)
 
 #### 2. 打开前端页面
